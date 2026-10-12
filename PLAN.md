@@ -48,7 +48,7 @@ One LangGraph ReAct agent (reason, call one tool, read result, decide again) for
 | D8 | UI inside FastAPI | **Vite + React SPA** served as static files by FastAPI; EMB green `#12A54A`, Inter | One deploy, product-quality look |
 | D9 | Human sign-off metrics not defined | **Operator metrics:** approval latency, edit/reject rate, disagreement with `rule_check` | Numbers for "where the human sits" |
 | D10 | Open: user simulator | **Match the tau2 v1.0.1 leaderboard user-sim model** | Baseline comparable to the public leaderboard |
-| D11 | No recorded demo | **3 to 4 minute walkthrough video** in week 6 | Free hosting sleeps when idle; the video is the dependable resume link |
+| D11 | No recorded demo | ~~3 to 4 minute walkthrough video in week 6~~ **Dropped (user decision, Oct 13 2026)** | Fallbacks for a sleeping Space are the local stack and session replay |
 | D12 | Knowledge retrieval out of scope | **In scope for banking only, using tau2's built-in BM25 retrieval config** | BM25 is local, free and needs no embeddings API key; a retrieval-config comparison is a stretch goal |
 | D13 | `llm_reviewer` config in the main matrix | **Moved to stretch** | Frees budget and about 3 days for banking |
 | D14 | Per-session JSONB copy of the domain DB | **Per-session log of successful WRITE calls**, replayed on the stock DB by the MCP server | Retail DB is 2.8 MB and airline 7 MB per session; a log is bytes, fits Neon free, and rebuilds identical state after restarts |
@@ -161,7 +161,7 @@ The operator picks the domain before each session, as in spec 4.6.
 | 3 | Retail guards + `rule_check`; MCP server (retail); serve mode with `interrupt()` + PostgresSaver; minimal console | **MVP checkpoint:** retail numbers plus a local live sign-off demo |
 | 4 | Airline + banking: policy rules, banking discovery and KB search (BM25), user-action buttons; telecom rules for bench | Smoke numbers for all 4 domains |
 | 5 | Ablations, red-team suite, full API routes, decision timeline SSE, console polish, 3 scenarios scripted | Ablation and red-team tables committed; scenarios run locally under 5 min |
-| 6 | Deploy to HF Spaces + Neon + Phoenix Cloud, GitHub Actions weekly smoke bench, record video | Deployed URL passes rehearsal checklist; video recorded |
+| 6 | Deploy to HF Spaces + Neon + Phoenix Cloud, GitHub Actions manual benchmark | Deployed URL passes rehearsal checklist |
 | 7 | Full matrix on the test splits, fix top 3 to 5 failure clusters (rerun only affected domains, within budget), debug journal, case-study README, publish `/evals` | Results published; journal has before/after deltas |
 
 Stretch, only if time and budget remain: `llm_reviewer` config, Sonnet 5.5 ceiling row, banking retrieval comparison (BM25 vs grep vs embeddings).
@@ -180,7 +180,7 @@ Stretch, only if time and budget remain: `llm_reviewer` config, Sonnet 5.5 ceili
 
 Rejected: Render free (sleeps after 15 min with 30 to 60 s cold starts, and its free Postgres is deleted after about 90 days); Vercel Hobby (non-commercial licence, 300 s cap).
 
-Before a client demo: open the Space and run one chat turn about 5 minutes ahead to wake the app and Neon. The recorded video is the fallback.
+Before a client demo: open the Space and run one chat turn about 5 minutes ahead to wake the app and Neon. The local stack and session replay are the fallbacks.
 
 ---
 
@@ -205,7 +205,7 @@ As spec section 10, with these changes:
 | Banking is the hardest domain (discovery + KB); low scores | Baseline runs on the same setup, so the delta is what matters; failure clusters become debug-journal entries |
 | tau2 API details differ from spec snippets | Week 1 day 1: read the v1.0.1 agent base class, `registry.py` and `docs/evaluation.md` before writing the adapter |
 | Confirmation guard too strict, success drops | Ablations quantify it; tune per domain on the train split only |
-| Free tiers asleep during a demo | Wake 5 minutes early; the video and `decision_events` replay are fallbacks |
+| Free tiers asleep during a demo | Wake 5 minutes early; the local stack and `decision_events` replay are fallbacks |
 
 ---
 
@@ -308,3 +308,17 @@ Done:
 Week 5 gate: **passed.** Red-team tables committed; scenarios run locally under 5 minutes.
 
 Open for week 6/7: rerun the red-team suite with the extended injection patterns; demo customer hints in the console; deployment.
+
+### Week 6 (Oct 13 2026): deployment and automation
+
+Decisions (user, Oct 13 2026): deploy to a Hugging Face Space; run the tau2 benchmark in GitHub Actions on a manual button only (no weekly schedule, so no recurring spend); run the free tests on every push.
+
+Done:
+- **CI** (`.github/workflows/ci.yml`): lint, all tests against a Postgres service, Docker image build, on every push and pull request.
+- **Benchmark workflow** (`.github/workflows/bench.yml`): manual, choose domains / configs / split / tasks / trials; metrics only; comparison table on the run summary; one commit of results for all domains. Inputs pass through env (no shell injection).
+- **Deploy workflow** (`.github/workflows/deploy-space.yml` + `scripts/deploy_space.py`): manual; uploads only what the image needs (tau2 without its 576 MB of leaderboard results), writes the Space README header, copies secrets from GitHub into the Space; refuses to deploy without `OPERATOR_TOKEN`.
+- **Operator sign-in is optional:** unset `OPERATOR_TOKEN` gives an open local console; set it for any public deploy.
+- `/` redirects to the console; Phoenix now runs in Docker with Postgres locally.
+- **Docs:** `docs/deploy.md` (accounts, secrets, deploy, rehearse against the URL). The demo video was dropped (user decision).
+
+Waiting on the user: Hugging Face token, Neon connection strings, Phoenix Cloud key and endpoint, set as GitHub secrets (docs/deploy.md section 2); then run the deploy workflow.

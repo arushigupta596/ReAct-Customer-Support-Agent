@@ -7,3 +7,4 @@ __pycache__/
 # tau2 writes simulations under vendor/tau2-bench/data/simulations; we copy what we keep into results/
 logs/
 .phoenix/
+.claude/

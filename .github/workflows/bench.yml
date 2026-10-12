@@ -1,0 +1,115 @@
+name: Benchmark
+
+# Manual only: every run spends OpenRouter credit (a 10-task smoke run on all 4 domains
+# with baseline + graph-full is about $6). Metrics only, no tracing (the runner is discarded).
+on:
+  workflow_dispatch:
+    inputs:
+      domains:
+        description: Domains, as a JSON list
+        default: '["retail", "airline", "telecom", "banking_knowledge"]'
+      configs:
+        description: Configs, space separated (baseline, graph-noguard, graph-full)
+        default: baseline graph-full
+      split:
+        description: Task split (train for development, test for headline numbers)
+        default: train
+        type: choice
+        options: [train, test]
+      num_tasks:
+        description: Tasks per domain (empty = the whole split)
+        default: "10"
+      trials:
+        description: Trials per task
+        default: "1"
+
+permissions:
+  contents: write
+
+env:
+  OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+  AGENT_MODEL: ${{ vars.AGENT_MODEL || 'openrouter/anthropic/claude-sonnet-5.5' }}
+  DEV_MODEL: ${{ vars.AGENT_MODEL || 'openrouter/anthropic/claude-sonnet-5.5' }}
+  AGENT_PROVIDER: ${{ vars.AGENT_PROVIDER || 'anthropic' }}
+  AGENT_EFFORT: ${{ vars.AGENT_EFFORT || 'medium' }}
+  USER_SIM_MODEL: ${{ vars.USER_SIM_MODEL || 'openrouter/openai/gpt-4.1' }}
+  USER_SIM_PROVIDER: ${{ vars.USER_SIM_PROVIDER || 'openai' }}
+  JUDGE_MODEL: ${{ vars.JUDGE_MODEL || 'openrouter/openai/gpt-4.1' }}
+  JUDGE_PROVIDER: ${{ vars.JUDGE_PROVIDER || 'openai' }}
+  RUN_ID: ci-${{ github.run_id }}
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340  # under the 6-hour job limit
+    strategy:
+      fail-fast: false
+      matrix:
+        domain: ${{ fromJSON(inputs.domains) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.13.0"
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: Run configs
+        # Inputs go through env, never straight into the script (avoids shell injection).
+        env:
+          DOMAIN: ${{ matrix.domain }}
+          CONFIGS: ${{ inputs.configs }}
+          SPLIT: ${{ inputs.split }}
+          NUM_TASKS: ${{ inputs.num_tasks }}
+          TRIALS: ${{ inputs.trials }}
+        run: |
+          tasks=()
+          if [ -n "$NUM_TASKS" ]; then tasks=(--num-tasks "$NUM_TASKS"); fi
+          for config in $CONFIGS; do
+            uv run python scripts/run_bench.py --domain "$DOMAIN" --config "$config" \
+              --split "$SPLIT" "${tasks[@]}" --trials "$TRIALS" --run-id "$RUN_ID" --no-trace
+          done
+      - name: Compare
+        env:
+          DOMAIN: ${{ matrix.domain }}
+        run: |
+          {
+            echo "### $DOMAIN"
+            echo '```'
+            uv run python scripts/compare.py --run-id "$RUN_ID" --domain "$DOMAIN" 2>/dev/null
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: results-${{ matrix.domain }}
+          path: results/${{ env.RUN_ID }}/${{ matrix.domain }}
+
+  commit:
+    # One commit for all domains, so parallel jobs never race on git push.
+    needs: run
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: results-*
+          path: downloaded
+      - name: Commit results
+        env:
+          SPLIT: ${{ inputs.split }}
+          CONFIGS: ${{ inputs.configs }}
+        run: |
+          shopt -s nullglob
+          for dir in downloaded/results-*; do
+            domain="${dir#downloaded/results-}"
+            mkdir -p "results/$RUN_ID/$domain"
+            cp -r "$dir"/. "results/$RUN_ID/$domain/"
+          done
+          if [ -z "$(git status --porcelain results)" ]; then echo "No results to commit."; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results
+          git commit -m "Benchmark results $RUN_ID ($SPLIT: $CONFIGS)"
+          git push

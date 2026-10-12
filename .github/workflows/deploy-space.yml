@@ -1,0 +1,34 @@
+name: Deploy to Hugging Face Space
+
+# Manual: deploy when you choose. Secrets live in GitHub and are copied into the Space.
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-space
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.13.0"
+      - name: Upload to the Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_SPACE: ${{ vars.HF_SPACE }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL_DIRECT: ${{ secrets.DATABASE_URL_DIRECT }}
+          OPERATOR_TOKEN: ${{ secrets.OPERATOR_TOKEN }}
+          MCP_TOKEN: ${{ secrets.MCP_TOKEN }}
+          PHOENIX_API_KEY: ${{ secrets.PHOENIX_API_KEY }}
+          PHOENIX_COLLECTOR_ENDPOINT: ${{ vars.PHOENIX_COLLECTOR_ENDPOINT }}
+          AGENT_MODEL: ${{ vars.AGENT_MODEL }}
+          GITHUB_REPO_URL: ${{ github.server_url }}/${{ github.repository }}
+        run: uv run --no-project --with huggingface_hub python scripts/deploy_space.py

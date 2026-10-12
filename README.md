@@ -1,5 +1,7 @@
 # ReAct Support Agent on tau2-bench
 
+[![CI](https://github.com/arushigupta596/ReAct-Customer-Support-Agent/actions/workflows/ci.yml/badge.svg)](https://github.com/arushigupta596/ReAct-Customer-Support-Agent/actions/workflows/ci.yml)
+
 A customer-support AI agent that resolves real requests (cancel an order, change a flight, update an account) by thinking one step at a time and using tools, with guardrails on every action and a human who signs off before anything irreversible happens. It is measured on [tau2-bench](https://github.com/sierra-research/tau2-bench) against tau2's built-in agent, and every decision is traced. Full plan and build log: [PLAN.md](PLAN.md). Debugging write-ups: [docs/debug_journal.md](docs/debug_journal.md).
 
 ## What it is
@@ -95,6 +97,8 @@ uv run uvicorn api.main:app --app-dir src --port 8000
 ```
 
 Open `http://localhost:8000/console`, start a session and open the customer chat link. With `OPERATOR_TOKEN` unset (the local default) the console needs no sign-in; set it in `.env` to require one, and always set it before any public deploy. Every action that changes data waits in the console for approve, edit or reject.
+
+To put the demo on a public URL (free Hugging Face Space, Neon Postgres, Phoenix Cloud), follow [docs/deploy.md](docs/deploy.md).
 
 The chat shows suggested messages for each domain (defined in `src/mcp_server/domains.py`), tagged by what they demonstrate: **Sign-off** (reaches the approvals console), **Question**, **Policy test** (the agent should refuse) and **Guard test** (an injection attempt the input guard flags). `uv run python scripts/rehearse.py` plays the three scripted demo scenarios end to end.
 

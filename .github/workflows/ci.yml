@@ -1,0 +1,57 @@
+name: CI
+
+# Free: no model API calls. Live-mode tests run against a Postgres service.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: app
+          POSTGRES_DB: react_agent
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U app -d react_agent"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://app:app@localhost:5432/react_agent
+      MCP_TOKEN: ci-only-mcp-token
+      AGENT_MODEL: openrouter/anthropic/claude-sonnet-5.5
+      AGENT_PROVIDER: anthropic
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.13.0"
+          enable-cache: true
+      - name: Install
+        run: uv sync --frozen
+      - name: Lint
+        run: uv run ruff check src tests scripts
+      - name: Create tables
+        run: uv run python scripts/migrate.py
+      - name: Tests
+        run: uv run pytest -q
+
+  docker:
+    # Builds the same image the Hugging Face Space runs, so a broken Dockerfile fails here first.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Build serve image
+        run: docker build -t react-support-agent .

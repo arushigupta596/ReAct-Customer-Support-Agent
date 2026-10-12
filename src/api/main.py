@@ -16,7 +16,7 @@ from pathlib import Path
 import anyio
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, Header, HTTPException
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse, RedirectResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from langchain_core.messages import AIMessage, HumanMessage
 from langgraph.types import Command
@@ -298,6 +298,11 @@ def run_user_action(session_id: str, body: UserAction):
 
 
 # ---------- pages ----------
+
+
+@app.get("/", include_in_schema=False)
+def home():
+    return RedirectResponse("/console")
 
 
 @app.get("/healthz")
