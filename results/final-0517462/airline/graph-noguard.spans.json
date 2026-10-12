@@ -1,0 +1,303 @@
+{
+ "504cc6d8-0869-490b-935e-a5e555848525": {
+  "span_id": "8fb2fb74a144b833",
+  "trace_id": "32310ebfed4f7f27eb603b4d141d832f",
+  "task_id": "6",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "5046dcd4-760a-41c7-93b5-25a72b3e07f2": {
+  "span_id": "b1a9ac32f0cb70f4",
+  "trace_id": "3854ba1181ba2a1f113f3ae310958694",
+  "task_id": "8",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "720c8f34-b344-4855-8df0-e5a7904de531": {
+  "span_id": "9d5acc4ad3ea41fa",
+  "trace_id": "a20f0ab660b02d81aeb94e89b80d2791",
+  "task_id": "2",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "2f074cb7-5cc9-4119-b47c-15dbdcbb4c9f": {
+  "span_id": "c5595e13533e2a01",
+  "trace_id": "a479378aec719b645dfbd0a13086871e",
+  "task_id": "13",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "0b08fd17-19e5-445c-9e34-d3bebf534ca4": {
+  "span_id": "5df59b6acc7b3358",
+  "trace_id": "68ee45a490109ccb3231e01a5eb1cecf",
+  "task_id": "16",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "5a765303-4315-49bc-bb59-4568aff419ef": {
+  "span_id": "2d60abe961b52007",
+  "trace_id": "6bebae30d9eab6b51805433406715c06",
+  "task_id": "19",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "94d1cba8-f552-461c-b2cc-f2f49f2289e4": {
+  "span_id": "5745fc7570cac1dd",
+  "trace_id": "5369ebaccf36753b4939dadf8c02d0d5",
+  "task_id": "22",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "972053b2-70d5-4dc3-85a8-d640a1700c9e": {
+  "span_id": "d585974e3b43ff55",
+  "trace_id": "9c7b8288ea0bf7f977fa25ecd42bacec",
+  "task_id": "18",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "d7dff0d4-c7bc-4619-9600-b319501613e1": {
+  "span_id": "4a6be14ddd4f4afc",
+  "trace_id": "a0db64db8ca360f50df46dc510371dae",
+  "task_id": "25",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "841a0bf9-e097-4cb3-963a-c2c8300ced34": {
+  "span_id": "df79ed4c936e91a5",
+  "trace_id": "ac683ebcfc0895317ecf77b2fc700d1b",
+  "task_id": "24",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "4ece0f67-ac68-4875-9700-93ef345e8eaf": {
+  "span_id": "add5dc82b3a71a21",
+  "trace_id": "13465a44e9be7bc1c073a0398e49dffb",
+  "task_id": "26",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "0059f76a-3853-434d-aa0f-4f2738ebb14b": {
+  "span_id": "d85ba84a7084cd57",
+  "trace_id": "bf790ff1c0bbb79157a480f2b1d71c19",
+  "task_id": "30",
+  "seed": 626729,
+  "guard_events": [
+   {
+    "guard": "user_known",
+    "verdict": "would_block",
+    "tool": "update_reservation_flights",
+    "reason": "User james_taylor_7043 has not been looked up. Get the user id from the customer and check their profile first. Policy: \"The agent must first obtain the user id from the user.\""
+   }
+  ]
+ },
+ "9047d334-b981-41f5-bf6e-b4023ac2e514": {
+  "span_id": "a9619d4866eb0162",
+  "trace_id": "f7a932a5763be5a2daffaf49679ef121",
+  "task_id": "29",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "8b8453fe-5f00-45e9-80b9-8906720099a1": {
+  "span_id": "602ffb9e809d97f9",
+  "trace_id": "3e70586499cc328ecccebdca5e63ab66",
+  "task_id": "31",
+  "seed": 626729,
+  "guard_events": [
+   {
+    "guard": "basic_economy_flights",
+    "verdict": "would_block",
+    "tool": "update_reservation_flights",
+    "reason": "This is a basic economy reservation, so its flights cannot be changed (only its cabin). Policy: \"Basic economy flights cannot be modified.\""
+   }
+  ]
+ },
+ "de49c3c4-361b-4c81-ac44-095bd645ee1c": {
+  "span_id": "3edf7811bbf3ef4a",
+  "trace_id": "bedceb7eeee09df736c3b4d85be4f236",
+  "task_id": "32",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "9f88cddf-879b-4cc8-aa49-345dafbf3a0e": {
+  "span_id": "ace77b9b2342b106",
+  "trace_id": "a0c3590b24f3327137d21bbe5c7e5095",
+  "task_id": "35",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "80b00da6-e687-4648-a590-82c298af9263": {
+  "span_id": "ddcdf412f9a7b231",
+  "trace_id": "9fad1c087724109e09e86e32b4d7f102",
+  "task_id": "45",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "43ad6267-e7e2-4219-950b-ceed162fb2a7": {
+  "span_id": "49134612d635c627",
+  "trace_id": "81fbb1fb410551efb0cfa45d8d429e58",
+  "task_id": "37",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "727b43a0-bfc6-4c34-b98b-ab10def77bf9": {
+  "span_id": "041d5dda70f7344e",
+  "trace_id": "33b135d82e2f74645840f3d68a1284b7",
+  "task_id": "48",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "7190665c-fcfa-4d67-96df-1e3c30d74d14": {
+  "span_id": "8d7c651bce7d0fef",
+  "trace_id": "cced87b88441d34ca2bd60428a351683",
+  "task_id": "6",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "5e3f7fc3-ea0f-4c4c-80fd-566b3c5ec010": {
+  "span_id": "32225f4ed8fdb535",
+  "trace_id": "62c2b0ac92546cf10dba5402b0f79ab7",
+  "task_id": "44",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "e591f76c-4006-4158-9a45-8f84eb6c4011": {
+  "span_id": "542d92c561966418",
+  "trace_id": "e5cf1989a9b95282c9aff09aed1c44d4",
+  "task_id": "2",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "999596b3-0998-47ca-9679-4c9a1e70228c": {
+  "span_id": "000dcc3cf17e075b",
+  "trace_id": "5be753ea99c8325c4aeab041205d84fc",
+  "task_id": "13",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "70a759ae-976a-4b3a-a30e-a88ffbbd38e3": {
+  "span_id": "c57dcde09bea9b04",
+  "trace_id": "447580118d5fdf591d00ad07cd452504",
+  "task_id": "16",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "7a16799a-3eb9-4e58-aec2-1e88add61639": {
+  "span_id": "67242859a5657f81",
+  "trace_id": "aff5f02fddcc2442a4b91ed8c6a023fb",
+  "task_id": "8",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "45287a44-3443-4019-b866-9ab75b692493": {
+  "span_id": "f8c28cb77748f640",
+  "trace_id": "7f6a05a8ae04df1bb1ba1edd637446e7",
+  "task_id": "19",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "5d6d8ec5-998c-4642-987f-660a00019ba0": {
+  "span_id": "d4031546983b1340",
+  "trace_id": "3f02937dbf505fa296002c4ca65dbe4f",
+  "task_id": "22",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "b0495196-a1fb-4757-919d-2cb773e5816d": {
+  "span_id": "e9a99d812329a676",
+  "trace_id": "4f7d4ff0569abda93296436caa055eb9",
+  "task_id": "25",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "5ae13c05-ed0f-49e8-93ff-86fb6eb244d2": {
+  "span_id": "b5f5671067a3a665",
+  "trace_id": "3d105845ce5f1078605498f510764f6a",
+  "task_id": "24",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "f39c3375-9769-4ac4-babf-305270d04c18": {
+  "span_id": "2f8e1f19c33dd0c4",
+  "trace_id": "8f836586e6a6759c5d56c7d3cd08b1e2",
+  "task_id": "18",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "4b9dfa08-3385-4eac-a772-eeadbb63663b": {
+  "span_id": "decddd4a1a573051",
+  "trace_id": "914a213260af96aa04fe89d65ae48d3c",
+  "task_id": "26",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "7de427a6-0c9f-41f1-8c69-e2597c76803d": {
+  "span_id": "da37a1931979d142",
+  "trace_id": "81faeb89f1e741790ec947761cce9658",
+  "task_id": "30",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "1c084eec-9525-4477-b1b5-43a193e7417a": {
+  "span_id": "fd6e028903a46992",
+  "trace_id": "4a027cc13d9d82449e6d766ff7eb91cc",
+  "task_id": "29",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "28172eff-cd19-462a-b42d-70700c2bb395": {
+  "span_id": "ad01a898e531d1b2",
+  "trace_id": "e2e8826feec83c140dd9b53b80a87189",
+  "task_id": "31",
+  "seed": 373753,
+  "guard_events": [
+   {
+    "guard": "basic_economy_flights",
+    "verdict": "would_block",
+    "tool": "update_reservation_flights",
+    "reason": "This is a basic economy reservation, so its flights cannot be changed (only its cabin). Policy: \"Basic economy flights cannot be modified.\""
+   }
+  ]
+ },
+ "73571aa7-7c34-4a3a-87b2-7df52ea144a0": {
+  "span_id": "8d8cdfc78c983525",
+  "trace_id": "d061d8e71a3d22b587f0302d46d763b0",
+  "task_id": "32",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "37ec4ebe-31ef-4cb2-8392-f8ef802220a0": {
+  "span_id": "9a6228272e355516",
+  "trace_id": "290d14b486e5d2bb5436401505a549bb",
+  "task_id": "35",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "25253358-ff8d-4437-8096-7203f710a8e2": {
+  "span_id": "2e342848d57f391a",
+  "trace_id": "fe041b46f6235621133f9a7348d1b5e2",
+  "task_id": "45",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "0e7bea90-6568-4c08-9553-613c37ff557e": {
+  "span_id": "6b7349f4bb85aab9",
+  "trace_id": "1744b5f681ff92139b4e1c5eec977776",
+  "task_id": "37",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "664c3bd7-7a2c-43d0-b41a-7aa7303aac04": {
+  "span_id": "764f000508d1dc2d",
+  "trace_id": "c67c9cac3a4c56e69f5b8a61c8442902",
+  "task_id": "48",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "f7ed0ba9-c0af-4c91-af6c-aba377f4cb31": {
+  "span_id": "0504ceafe4dd0ce9",
+  "trace_id": "c55c071b34b333abe295c222a5d684f7",
+  "task_id": "44",
+  "seed": 373753,
+  "guard_events": []
+ }
+}

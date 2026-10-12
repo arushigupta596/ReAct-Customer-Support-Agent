@@ -1,0 +1,65 @@
+{
+ "d12909bf-fe28-4656-8474-2ba4225ed05c": {
+  "span_id": "c9e1dbdf9bad76f5",
+  "trace_id": "d1de7cdfdee9c75ead08037c58f97aed",
+  "task_id": "task_015",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "759701ff-2a84-47ea-b9d7-975e2ec98b29": {
+  "span_id": "e8feb9da590cedb0",
+  "trace_id": "177b9d1b314dc8a75e1d6f98eb193c02",
+  "task_id": "task_021",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "3a187d64-7cac-4617-9bad-07eff0dbd33b": {
+  "span_id": "2cba4bfc6d118859",
+  "trace_id": "3bec8b76499fd927051801cb5975d79b",
+  "task_id": "task_020",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "a12a8079-327e-4a80-b002-6ac9bd3d2dfa": {
+  "span_id": "6d45f65f992c94d4",
+  "trace_id": "26c50fe2b3316dd0b161a5165ea806c1",
+  "task_id": "task_022",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "b634fcee-4806-4c19-8efd-a36e7e715f0e": {
+  "span_id": "6eb7e07c2cb84b9a",
+  "trace_id": "644e2b701a0cd61c30790c2cc402d756",
+  "task_id": "task_026",
+  "seed": 626729,
+  "guard_events": [
+   {
+    "guard": "rewards_after_dispute",
+    "verdict": "block",
+    "tool": "call_discoverable_agent_tool",
+    "reason": "No resolved, approved cash-back dispute in this conversation. For a cash-back discrepancy, give the customer `submit_cash_back_dispute_0589` with give_discoverable_user_tool so they submit the dispute themselves; only update rewards after it comes back RESOLVED. Policy: \"After a cash back dispute is resolved and approved, you must update the affected transaction(s) with the correct rewards value. (Knowledge base: Applying Resolved Cash Back Dispute Corrections)\""
+   }
+  ]
+ },
+ "c3a72a49-36a9-4495-9e1d-56206dfd4f8d": {
+  "span_id": "6a07391fc6590329",
+  "trace_id": "9b35d9e40bd86ec398321346d90964ac",
+  "task_id": "task_015",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "bc8c8388-0d8d-4d8b-a69e-ad660b2da1ec": {
+  "span_id": "abdbc86e5a7a1d0a",
+  "trace_id": "d2b81daa879b4d78662e8d78c3bc9050",
+  "task_id": "task_020",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "d68baa01-9847-45f0-b6b2-4fd7a9a77fbd": {
+  "span_id": "890440e6b8d21ac3",
+  "trace_id": "913d99e47ed1a3d897ed6d53feeb8a26",
+  "task_id": "task_021",
+  "seed": 373753,
+  "guard_events": []
+ }
+}

@@ -1,0 +1,576 @@
+{
+ "121bdd74-2eda-4d26-96e3-7b65fb60d978": {
+  "span_id": "7e55e93ad42a7406",
+  "trace_id": "cc69648b72811593c53be4589c6477cb",
+  "task_id": "12",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "9e29f695-a925-4149-909f-1ebd8b081cb8": {
+  "span_id": "2760717d2ba3ea2b",
+  "trace_id": "2a872e0af6614befabd6e9040b7dc6b6",
+  "task_id": "9",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "5c25c9aa-ebf3-41f4-a476-d54a52066a37": {
+  "span_id": "3275050a22b1a4d2",
+  "trace_id": "088ba0d3413cf93b459f43ccfd97110c",
+  "task_id": "5",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "0890d398-42c7-4a95-9804-ddc1ef467246": {
+  "span_id": "e7c273ea1825fde3",
+  "trace_id": "fe99b92d6f41479094a0efc8a8c45e9a",
+  "task_id": "17",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "b1132c19-72cb-4f64-9991-0549b7c85680": {
+  "span_id": "9c1b29e3e4cfdea3",
+  "trace_id": "8240db6a76e3ca1987c62ec89f7c43e0",
+  "task_id": "18",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "2c7d8969-d284-4748-90e2-70d03899e179": {
+  "span_id": "08baea7a2d984d01",
+  "trace_id": "9d0cf394d6255526939876958c730781",
+  "task_id": "26",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "b1125d33-e978-4704-90ad-8fdce2f82c08": {
+  "span_id": "30eb91257e13ae3c",
+  "trace_id": "3d11ca2fc6a7fa836715560d06a2c0d6",
+  "task_id": "27",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "1436555e-da1f-4579-b736-66a1ee48d45e": {
+  "span_id": "bbf83df84d2b7c94",
+  "trace_id": "2a657eb42a2021c839987eb126121bd0",
+  "task_id": "33",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "2062a405-09c1-4601-ad3c-da0e284465c5": {
+  "span_id": "67aaf5c2466a912e",
+  "trace_id": "f9076be633a0a83b7415c763c6432ae3",
+  "task_id": "32",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "919d70ad-95cd-46a5-bc28-2271491477e6": {
+  "span_id": "59b13071b4d75bc5",
+  "trace_id": "45313a6bc211bfc53d20ec80dbf6ba88",
+  "task_id": "36",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "fc1290cd-4723-4684-a3a9-00ec7f91db44": {
+  "span_id": "96a13c556683877a",
+  "trace_id": "53f94e2c3833dcbe81d14df18a7b7165",
+  "task_id": "38",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "20b0fd8f-bb28-4b8c-bddc-15074e701fbc": {
+  "span_id": "82de5c1aabb946c6",
+  "trace_id": "992dc82e62ed2940ac2f251da20005d3",
+  "task_id": "39",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "8ab8a26b-545c-48a1-a6aa-adc88bee549d": {
+  "span_id": "bf9172c29280cdee",
+  "trace_id": "fbac23d264c9e9dddcc3ce8d1453904d",
+  "task_id": "40",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "8452b16f-3848-480b-8d15-860c2ada6956": {
+  "span_id": "48632dffa35106ea",
+  "trace_id": "e4ac56733a14b2d98915ea2d97a09cad",
+  "task_id": "49",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "09212ab5-b7f2-4d9c-a511-d1241142458e": {
+  "span_id": "492e7eb6e5bb32db",
+  "trace_id": "da9f963710e909a4e000f8e1d2b7dfa8",
+  "task_id": "45",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "e9fefff5-94b8-44f6-95ec-de9a29f0d355": {
+  "span_id": "3fce389b5fc94bda",
+  "trace_id": "72fcf1865978652ce7e2aeb2ab645367",
+  "task_id": "42",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "1788a998-e30c-4800-aba2-23a12926ee8f": {
+  "span_id": "3e80860a9b1be160",
+  "trace_id": "c80076d5e7b41fba60d9010fb83c0e45",
+  "task_id": "51",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "8a221055-c867-4358-bc87-90a378226dc3": {
+  "span_id": "c5774a8652bce3cc",
+  "trace_id": "1e2e2bd7a7d058bef829d1f6abb26de8",
+  "task_id": "53",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "0c9d46eb-835e-4db2-ae63-61073672fb0c": {
+  "span_id": "a5cf2272c0550481",
+  "trace_id": "b628c31cdb7cf7fa801a8d87575e7485",
+  "task_id": "60",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "2aef90f2-e3ac-495b-86cb-3ba3adf62ca1": {
+  "span_id": "6322fdc2843a3d90",
+  "trace_id": "c6ffd033421989278d58618d0e5e98cf",
+  "task_id": "56",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "df6957bd-249d-41e0-89c7-5fd0693d639e": {
+  "span_id": "a4c00539a250d84c",
+  "trace_id": "d0892de711c27251474a1f6ed443f0f6",
+  "task_id": "55",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "dcbd0527-cc42-4a5b-a1d2-36b2b57977ca": {
+  "span_id": "0d1cf12c86dd531b",
+  "trace_id": "3c43e8be457da21261620d8c0aa97861",
+  "task_id": "61",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "d1865243-0427-4bbf-990a-f03c1ff41e21": {
+  "span_id": "e51b622dcc9219c3",
+  "trace_id": "c5be15167b1d47118a204031d7a6e5f5",
+  "task_id": "62",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "b300c81d-d36c-4ada-bd36-52314cd7b4c7": {
+  "span_id": "77fa4aff2f9674fe",
+  "trace_id": "59e8757eaf6ab3ff1bfb498e81c26bb7",
+  "task_id": "65",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "0851bb19-9049-46ae-a6a2-851062bc72c8": {
+  "span_id": "92327268556b511b",
+  "trace_id": "fdfc4a140659a54c87178d7f717ba021",
+  "task_id": "64",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "c14c7b96-9cc8-4d64-bbb8-c7f5cc066bcb": {
+  "span_id": "58c283b3a5b9cc4d",
+  "trace_id": "48aaa144507398c44282f42823f3c551",
+  "task_id": "68",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "0fb7ce3d-385c-40c5-b183-dce0a1399262": {
+  "span_id": "c20f7f6fb2c9081e",
+  "trace_id": "dd73f23ad066ffc3d81cdc53e1ac1d17",
+  "task_id": "70",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "f06476c0-6ea3-46bc-882b-433bc7d578b5": {
+  "span_id": "1ecde861241c5b2f",
+  "trace_id": "60dac286c6f1552d493e3368365b1024",
+  "task_id": "71",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "21c386eb-d3ea-40b5-bdaa-abf4a940ec89": {
+  "span_id": "12a33e55b397922d",
+  "trace_id": "64c14d352bf94294437aa818c299e3ef",
+  "task_id": "77",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "552dc804-edbc-4b0b-b3a8-d38895e00b4d": {
+  "span_id": "9d16542d849d9449",
+  "trace_id": "3031097332102123713a39322e50f2c2",
+  "task_id": "74",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "62342585-83aa-4af1-abd7-1efebbf065c4": {
+  "span_id": "db4e3403c973bdfd",
+  "trace_id": "631b5a64184c5068f51153a274e970ff",
+  "task_id": "86",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "ea14e3f2-8a4b-4ab2-b860-57ca428364d5": {
+  "span_id": "28c3f899205dc79f",
+  "trace_id": "968a837cfa86e92db293c4c68cca9116",
+  "task_id": "79",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "2774ce01-48c1-4670-859d-37ef33bc8ec8": {
+  "span_id": "89abe40fb30af8a1",
+  "trace_id": "0511d4f066e6cf90245ea4433dcac3be",
+  "task_id": "90",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "b3da6b45-d3bf-43a6-ba86-e239e833a529": {
+  "span_id": "1d2d54a1f1e079fa",
+  "trace_id": "672426944ccd688ab9cdf9ac7638197b",
+  "task_id": "97",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "d48e0741-dde0-46e5-853a-75f8027b6c95": {
+  "span_id": "62f57ca4b3b6460c",
+  "trace_id": "235b09b68aff81957a999fa374811526",
+  "task_id": "94",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "319113ab-1c03-4a8e-b634-14058cf4a226": {
+  "span_id": "9c678bba4284e889",
+  "trace_id": "2c6752f6e829d0c165146ea796283177",
+  "task_id": "101",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "248c8001-bf11-4361-8f75-28aab5784a45": {
+  "span_id": "252e0b87f7cef710",
+  "trace_id": "a740962224311c265e5a8f86c1fa36f5",
+  "task_id": "100",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "37bb3a96-0eb2-4961-81bc-ab42a0251e11": {
+  "span_id": "4919afe5e443d78e",
+  "trace_id": "363f31497e96700ceb7d9ecc8e02c984",
+  "task_id": "102",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "2ce99c32-9f42-4084-807f-ff3d713aaa5b": {
+  "span_id": "0ee91ffe4fbc15c8",
+  "trace_id": "0bf4da956909a8980ded26a661b0d3d1",
+  "task_id": "108",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "0c00e4f0-f2a9-43a9-8046-7feb51adce9a": {
+  "span_id": "a0f5cd2e7176dad2",
+  "trace_id": "d1e750d1c420c72ff1c8ac94df281741",
+  "task_id": "111",
+  "seed": 626729,
+  "guard_events": []
+ },
+ "cda5016f-8516-4651-9eec-7c53b1506ae8": {
+  "span_id": "54ac52619d43197d",
+  "trace_id": "fd95e0d6007f0f3ac27f1fd213b53230",
+  "task_id": "5",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "04e92f8d-c24b-4b32-8a87-0925cec49c7a": {
+  "span_id": "02b8f3547edb3410",
+  "trace_id": "c23285896646fefc1daf8c6bd332c360",
+  "task_id": "9",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "6b08ea45-851e-40e9-8833-981e8ef5dd75": {
+  "span_id": "387844f65b065873",
+  "trace_id": "e836e9e961346d82367acfb6fccfc0b9",
+  "task_id": "12",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "89aad458-1238-485f-87d5-82ec2b8329e8": {
+  "span_id": "bfdcae8ea46d695c",
+  "trace_id": "e466fa29b2a652cdf9c86686e47b5999",
+  "task_id": "17",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "a9d7c528-f27d-4c10-a67c-c5f1a814c28a": {
+  "span_id": "1975f286318b681e",
+  "trace_id": "031a3f3909a040d73bbcff6e238f4940",
+  "task_id": "27",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "313ad6ad-2f6f-497a-b9c8-bf238d0c085b": {
+  "span_id": "7c37c7c57299ed44",
+  "trace_id": "b3a8402226c5724394fa24c510b8f9d1",
+  "task_id": "18",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "b69d81f6-eb25-499e-ad12-d3fb6a9f9a3c": {
+  "span_id": "8726cbf97c0bc641",
+  "trace_id": "04a60e5eb0691141b63197289e689204",
+  "task_id": "26",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "f3229493-c2f0-40cc-ac23-c8510bb03f11": {
+  "span_id": "2ce5a7bd11442a08",
+  "trace_id": "f9c85266aec50899b69d8ad6802c70ba",
+  "task_id": "33",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "21853652-a254-4422-9139-18ef73e96b08": {
+  "span_id": "7175ec47889bbf03",
+  "trace_id": "d8689adcecb5efddb3f7c45b3c099ca6",
+  "task_id": "32",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "950dd896-10f0-4b5a-8521-2c0c8032fd45": {
+  "span_id": "e281b485c9e1c860",
+  "trace_id": "22173631a00783c0e0243050f69218ea",
+  "task_id": "36",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "1f676a20-3b46-4fa8-be88-64b0a8ee5d77": {
+  "span_id": "d9e23a6e7306b96c",
+  "trace_id": "e19baf97845b5140cac89a8145da8b9a",
+  "task_id": "38",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "bdf2546b-8307-49f9-a7ba-baf745000e54": {
+  "span_id": "4bc039caf16dfdbb",
+  "trace_id": "79ffc0bb1cd330f7f9a1d4634e62418c",
+  "task_id": "39",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "f05a48e6-2eca-476a-b2c5-c2553a3c43df": {
+  "span_id": "beeb51ebbdb02455",
+  "trace_id": "023ed11af949179a4cb14c02c3bca36a",
+  "task_id": "40",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "a1d19907-51ca-41c2-aba3-73675dd4b06d": {
+  "span_id": "0d8fd9bdd2bcbf1d",
+  "trace_id": "2429e2bae9a0ecb68c5ac8241e157bce",
+  "task_id": "49",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "f7ce561e-4a8f-4f7e-95fb-f957e93c64fa": {
+  "span_id": "689903cff4e1ab0a",
+  "trace_id": "354e88718e40e43598a45aa61934d05e",
+  "task_id": "45",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "675a34fe-4c20-4bb0-97e5-a5acab479549": {
+  "span_id": "be7014b14fb333fa",
+  "trace_id": "2e7b7a3f38a53c8edccd69de6d19e25b",
+  "task_id": "42",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "bae6964c-ad22-49e5-89b1-33cbf32a9114": {
+  "span_id": "680138492e63495f",
+  "trace_id": "93ef0bda53447d36c2bd07578b6f898f",
+  "task_id": "51",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "03566c49-123a-4927-baa6-1901fcf7fe42": {
+  "span_id": "3d267c1388892f88",
+  "trace_id": "54a60b904bea4f8c2d9bd9d4dd718721",
+  "task_id": "53",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "ffe7418a-099f-4d4f-804d-0d33705a6319": {
+  "span_id": "ecc67c029975de33",
+  "trace_id": "69142c9870325542e571bda4cfd3b849",
+  "task_id": "60",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "67c7a38a-a969-4905-8477-11c80e305955": {
+  "span_id": "5e0666b95d64e727",
+  "trace_id": "fc024d6b804f49a01fcc15ef4390004c",
+  "task_id": "55",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "aab427c6-fb4c-4322-8079-52d3a433b9c7": {
+  "span_id": "fbcbd633c89e895b",
+  "trace_id": "e450611896c581a8eaccc6d9a9fe5dfe",
+  "task_id": "56",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "6795ad4a-7639-46ed-b3dd-a24070cd99ee": {
+  "span_id": "8fc4d96c012d7e8a",
+  "trace_id": "28315cf248b3539782a549243805bec6",
+  "task_id": "61",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "6b632c5e-9113-488b-aaf0-608cccdfdb4e": {
+  "span_id": "df3e7779c215d4f6",
+  "trace_id": "c073c100d9acd2be0ab7f0b5f2e7b368",
+  "task_id": "65",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "baea96eb-9593-41c4-88c5-4693b274940a": {
+  "span_id": "7dcfc14ff8df375e",
+  "trace_id": "fdf58a7a9794d08e7d817a3cdbdece86",
+  "task_id": "62",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "4824cc9b-d567-4be2-b3d7-9972594f212b": {
+  "span_id": "d0c082b7de4f0179",
+  "trace_id": "0403a5a760bca2fa180ae873898bacdf",
+  "task_id": "64",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "7fd1b751-547d-46bf-8d06-a5d4dedffef9": {
+  "span_id": "aa36c81fa46f511a",
+  "trace_id": "a31b7c3f817bb088efb9313a8c0302fe",
+  "task_id": "70",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "c1d7f21c-0fde-476a-bfa0-848e968cd54e": {
+  "span_id": "a1bac3fad39cc98f",
+  "trace_id": "d89b2af039760c33e66842e9953dee35",
+  "task_id": "68",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "a14d6053-a79d-4d37-a5cb-d7e05655255a": {
+  "span_id": "57d73990dc6a3015",
+  "trace_id": "2701a1cd4f9217d8c6eb7ff5906c4c11",
+  "task_id": "77",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "da8257ce-d0fd-47ea-8b7d-f54955037a5c": {
+  "span_id": "a9c3dce7d32a1b95",
+  "trace_id": "5055eba380347bdb57e41d959b45d090",
+  "task_id": "71",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "fcb9be2e-4e88-46a0-a4b2-64806815597e": {
+  "span_id": "571e9e32e008f219",
+  "trace_id": "6c23caf2e2f90a99203ab8d797d4c188",
+  "task_id": "74",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "da52fbda-f32d-4814-910c-23a853681185": {
+  "span_id": "d6d5cab082e9659d",
+  "trace_id": "a146875e33e9ee52e1c13464d58035da",
+  "task_id": "79",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "96338fed-1c01-49e2-888a-84f1e40f9a83": {
+  "span_id": "7f38db544de8a101",
+  "trace_id": "d04fe1cb100c455cf41797aa84ed9cb3",
+  "task_id": "90",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "f69c3387-d200-4965-b007-8e06ce225336": {
+  "span_id": "3e38dac008510cf0",
+  "trace_id": "499e381d2acdefe7f438c5f7d47dcd69",
+  "task_id": "86",
+  "seed": 373753,
+  "guard_events": [
+   {
+    "guard": "confirmation",
+    "verdict": "would_block",
+    "tool": "modify_pending_order_items",
+    "reason": "The customer has not explicitly confirmed. List the exact action details and ask for a clear yes before calling this tool. Policy: \"Before taking any action that updates the database, you must list the action details and obtain explicit user confirmation (yes) to proceed.\""
+   }
+  ]
+ },
+ "c488728c-bc3e-4294-a38f-af4437241382": {
+  "span_id": "bf8fa4b3f913b63b",
+  "trace_id": "6b78f298861c5654caf42a1ad131d168",
+  "task_id": "94",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "d797e58c-9dfb-46af-b64f-57379b378e32": {
+  "span_id": "e4fa46a3b6fdf889",
+  "trace_id": "2de8c02ca5108b24a559a89d20e39365",
+  "task_id": "97",
+  "seed": 373753,
+  "guard_events": [
+   {
+    "guard": "order_status",
+    "verdict": "would_block",
+    "tool": "modify_pending_order_address",
+    "reason": "Order #W6750959 is 'pending (item modified)'; modify_pending_order_address needs 'pending'. Policy: \"Generally, you can only take action on pending or delivered orders.\""
+   }
+  ]
+ },
+ "c2145d91-ae5f-4144-906f-ced2fdf32ed3": {
+  "span_id": "68c92609f9a1861c",
+  "trace_id": "44777ea27350fd39052267bedb44ddbf",
+  "task_id": "100",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "a8d71422-b3b1-4255-94b4-7fda86a5d6a8": {
+  "span_id": "14ae14c812ec53ff",
+  "trace_id": "3ae7d88b9b526ddfe2ab1ca009c261f1",
+  "task_id": "102",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "3f36a44d-6d29-4988-b0df-7883e6ce160f": {
+  "span_id": "1a31cb9c3ac3114d",
+  "trace_id": "eeea74f12b72c6004ab746c7b4ac3cc1",
+  "task_id": "101",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "88b0b99c-57a4-4786-826a-1a994b639ad5": {
+  "span_id": "03fd1a3f6030d1b1",
+  "trace_id": "f28724de05d28a1171b572a326dad20a",
+  "task_id": "108",
+  "seed": 373753,
+  "guard_events": []
+ },
+ "41b6ba9d-2fc0-4d64-943c-40bf899f719f": {
+  "span_id": "06d564cbb910b74d",
+  "trace_id": "a18369ce45ad0dfd72b5e16df3c59820",
+  "task_id": "111",
+  "seed": 373753,
+  "guard_events": []
+ }
+}

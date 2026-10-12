@@ -300,6 +300,22 @@ def run_user_action(session_id: str, body: UserAction):
 # ---------- pages ----------
 
 
+PUBLISHED = ROOT / "results" / "published.json"
+
+
+@app.get("/evals/latest")
+def latest_evals():
+    """Latest published benchmark and red-team results (scripts/publish.py)."""
+    if not PUBLISHED.exists():
+        raise HTTPException(404, "no published results yet")
+    return json.loads(PUBLISHED.read_text())
+
+
+@app.get("/evals", include_in_schema=False)
+def evals_page():
+    return FileResponse(UI / "evals.html")
+
+
 @app.get("/", include_in_schema=False)
 def home():
     return RedirectResponse("/console")

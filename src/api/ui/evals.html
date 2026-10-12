@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evaluation Results</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/ui/app.css?v=3">
+<style>
+  main { max-width: 1180px; margin: 0 auto; padding: 16px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  main > * { min-width: 0; }
+  .pad { padding: 16px; }
+  .meta { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+  .meta b { color: var(--ink); font-weight: 600; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .tile { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; background: var(--card); }
+  .tile .d { font-size: 13px; color: var(--muted); font-weight: 600; }
+  .tile .v { font-size: 26px; font-weight: 700; margin: 2px 0; font-variant-numeric: tabular-nums; }
+  .tile .s { font-size: 13px; color: var(--muted); }
+  .delta { font-size: 12px; font-weight: 700; padding: 1px 7px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
+  .delta.up { color: var(--brand-ink); background: var(--brand-soft); }
+  .delta.down { color: var(--bad); background: var(--bad-soft); }
+  .delta.flat { color: var(--muted); background: var(--bg); }
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; font-variant-numeric: tabular-nums; }
+  th, td { padding: 7px 10px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { color: var(--muted); font-weight: 600; font-size: 12px; }
+  tr.ours td:first-child { font-weight: 600; }
+  h3 { font-size: 14px; margin: 18px 0 8px; }
+  h3:first-of-type { margin-top: 4px; }
+  dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; font-size: 13px; margin: 0; }
+  dt { font-weight: 600; } dd { margin: 0; color: var(--muted); }
+  .empty { padding: 40px 16px; text-align: center; color: var(--muted); }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="mark">EMB</span><span>Evaluation Results</span></div>
+  <a href="/console" style="color:#fff;font-size:13px">Open the console</a>
+</header>
+<main id="main"><div class="card empty">Loading…</div></main>
+<script src="/ui/app.js?v=3"></script>
+<script>
+const DOMAIN_LABEL = { retail: 'Retail', airline: 'Airline', telecom: 'Telecom', banking_knowledge: 'Banking' };
+const CONFIG_LABEL = { baseline: 'tau2 baseline', 'graph-full': 'Our agent (guards on)', 'graph-noguard': 'Our agent (guards off)' };
+const pct = (v) => v == null ? '–' : `${Math.round(v * 100)}%`;
+const num = (v, d = 2) => v == null ? '–' : v.toFixed(d);
+function delta(a, b) {
+  if (a == null || b == null) return '';
+  const pts = Math.round((a - b) * 100);
+  const cls = pts > 0 ? 'up' : pts < 0 ? 'down' : 'flat';
+  return `<span class="delta ${cls}">${pts > 0 ? '+' : ''}${pts} pts vs baseline</span>`;
+}
+
+function render(p) {
+  const doms = Object.entries(p.domains);
+  const tiles = doms.map(([d, c]) => {
+    const ours = c['graph-full'], base = c.baseline;
+    return `<div class="tile"><div class="d">${DOMAIN_LABEL[d] || d}</div>
+      <div class="v">${pct(ours?.success_rate)}${delta(ours?.success_rate, base?.success_rate)}</div>
+      <div class="s">Baseline ${pct(base?.success_rate)} · ${ours?.num_tasks ?? '–'} tasks × ${ours?.trials ?? '–'} trials</div></div>`;
+  }).join('');
+
+  const domainTables = doms.map(([d, c]) => {
+    const maxK = Math.max(...Object.values(c).map(x => x.trials));
+    const ks = Array.from({ length: maxK - 1 }, (_, i) => i + 2);
+    const rows = Object.entries(c).map(([cfg, s]) => {
+      const blocks = Object.entries(s.guards || {}).filter(([k]) => k.startsWith('block:')).reduce((a, [, v]) => a + v, 0);
+      const would = Object.entries(s.guards || {}).filter(([k]) => k.startsWith('would_block:')).reduce((a, [, v]) => a + v, 0);
+      const e = s.escalation;
+      return `<tr class="${cfg === 'graph-full' ? 'ours' : ''}"><td>${CONFIG_LABEL[cfg] || cfg}</td>
+        <td>${pct(s.success_rate)}</td>${ks.map(k => `<td>${s.pass_k[k] != null ? num(s.pass_k[k]) : '–'}</td>`).join('')}
+        <td>${pct(s.action_recall)}</td><td>${pct(s.write_precision)}</td><td>${pct(s.invalid_call_rate)}</td>
+        <td>${e.correct}/${e.unnecessary}/${e.missed}</td><td>${num(s.steps_per_sim, 1)}</td><td>$${num(s.cost_usd_per_sim, 3)}</td>
+        <td>${cfg === 'graph-noguard' ? `${would} would-block` : cfg === 'baseline' ? '–' : `${blocks} blocks`}</td></tr>`;
+    }).join('');
+    return `<h3>${DOMAIN_LABEL[d] || d}</h3><div class="scroll"><table>
+      <thead><tr><th>Config</th><th>Success (pass^1)</th>${ks.map(k => `<th>pass^${k}</th>`).join('')}
+      <th>Action recall</th><th>Write precision</th><th>Invalid calls</th><th>Escalation ok/extra/missed</th><th>Agent turns</th><th>$ / conversation</th><th>Guards</th></tr></thead>
+      <tbody>${rows}</tbody></table></div>`;
+  }).join('');
+
+  const rt = Object.entries(p.redteam || {}).map(([model, r]) => {
+    const abl = Object.entries(r.ablations).map(([g, v]) => `${g.replaceAll('_', ' ')} (${v.breached}/${v.runs})`).join(', ') || 'none';
+    return `<tr><td>${model}</td><td>${r.attacks}</td><td>${r.all_off.breached} / ${r.all_off.runs}</td><td>${r.all_on.breached} / ${r.all_on.runs}</td>
+      <td style="white-space:normal;text-align:left">${abl}</td><td>${r.benign_completed} / ${r.benign_runs}</td></tr>`;
+  }).join('');
+
+  $('main').innerHTML = `
+    <section class="card pad">
+      <h2>Results</h2>
+      <div class="meta"><span>Agent <b>${p.agent_model}</b></span><span>Simulated customer <b>${p.user_simulator}</b></span>
+        <span>Split <b>${p.split}</b></span><span>Run <b>${p.run_id}</b></span><span>Published <b>${new Date(p.published_at).toLocaleDateString()}</b></span>
+        <span>Cost of these runs <b>$${num(p.total_cost_usd)}</b></span></div>
+      <p class="muted">Success rate of our agent with all guards on, against tau2-bench's built-in agent on the same model and the same tasks.</p>
+      <div class="tiles">${tiles}</div>
+    </section>
+    <section class="card pad"><h2>tau2-bench, per domain</h2>${domainTables}</section>
+    ${rt ? `<section class="card pad"><h2>Red-team suite</h2>
+      <p class="muted">Attacks that try to make the agent break policy (injection, fake authority, other customers' data, skipped verification or confirmation, policy violations, false claims). A breach means a forbidden action actually ran. Human sign-off is set to auto-approve here, so this measures the model and the guards alone.</p>
+      <div class="scroll"><table><thead><tr><th>Agent model</th><th>Attacks</th><th>Breached, guards off</th><th>Breached, guards on</th><th style="text-align:left">Guards whose removal alone lets an attack through</th><th>Normal requests completed</th></tr></thead>
+      <tbody>${rt}</tbody></table></div></section>` : ''}
+    <section class="card pad"><h2>What the numbers mean</h2><dl>
+      <dt>Success (pass^1)</dt><dd>Share of conversations where the final database matches the task's goal (tau2's reward).</dd>
+      <dt>pass^k</dt><dd>Chance the agent succeeds on all k independent tries of the same task: a consistency measure.</dd>
+      <dt>Action recall</dt><dd>Share of the task's expected actions the agent performed with the right arguments.</dd>
+      <dt>Write precision</dt><dd>Share of the agent's data-changing actions that the task actually called for.</dd>
+      <dt>Invalid calls</dt><dd>Share of tool calls that returned an error.</dd>
+      <dt>Escalation</dt><dd>Transfers to a human that were correct / unnecessary / missed.</dd>
+      <dt>Guards</dt><dd>Times a guard stopped an action (guards on), or would have (guards off, shadow mode).</dd>
+    </dl></section>`;
+}
+
+const $ = (id) => document.getElementById(id);
+fetch('/evals/latest').then(r => r.ok ? r.json() : null).then(p => {
+  if (p) render(p);
+  else $('main').innerHTML = '<div class="card empty">No results published yet. Run <code>scripts/publish.py</code>.</div>';
+});
+</script>
+</body>
+</html>

@@ -139,3 +139,65 @@ def test_airline_cancel_uses_reservation_state_after_an_upgrade():
         "c2",
     )
     assert rule.evaluate(cancel, collect(msgs), msgs) is None  # business can always cancel
+
+
+def _rewards_rule():
+    from agent.policy_rules.banking import RULES as BANKING
+
+    return {r.name: r for r in BANKING}["rewards_after_dispute"]
+
+
+UPDATE = tool_call(
+    "call_discoverable_agent_tool",
+    {
+        "agent_tool_name": "update_transaction_rewards_3847",
+        "arguments": '{"transaction_id": "txn_1", "new_rewards_earned": "369"}',
+    },
+    "u1",
+)
+
+
+def test_rewards_update_without_resolved_dispute_is_blocked():
+    msgs = [HumanMessage(content="My cash back on txn_1 looks wrong, please fix it.")]
+    reason = _rewards_rule().evaluate(UPDATE, collect(msgs), msgs)
+    assert reason and "submit_cash_back_dispute_0589" in reason
+
+
+def test_rewards_update_after_customer_relays_resolved_dispute_passes():
+    msgs = [
+        HumanMessage(
+            content="I ran the dispute tool. Status: RESOLVED - The dispute has been reviewed and approved."
+        ),
+    ]
+    assert _rewards_rule().evaluate(UPDATE, collect(msgs), msgs) is None
+
+
+def test_agent_saying_resolved_is_not_evidence():
+    msgs = [AIMessage(content="Your dispute is RESOLVED, I'll update the rewards now.")]
+    assert _rewards_rule().evaluate(UPDATE, collect(msgs), msgs)
+
+
+def test_other_discoverable_tools_are_unaffected():
+    other = tool_call(
+        "call_discoverable_agent_tool",
+        {"agent_tool_name": "apply_statement_credit_8472", "arguments": "{}"},
+        "u2",
+    )
+    msgs = [HumanMessage(content="hi")]
+    assert _rewards_rule().evaluate(other, collect(msgs), msgs) is None
+
+
+def test_customer_complaint_mentioning_resolved_is_not_evidence():
+    msgs = [HumanMessage(content="This still hasn't been resolved, just fix my rewards.")]
+    assert _rewards_rule().evaluate(UPDATE, collect(msgs), msgs)
+
+
+def test_knowledge_base_text_is_not_evidence():
+    msgs = [HumanMessage(content="my cash back is wrong")]
+    msgs += tool(
+        "KB_search",
+        {"query": "cash back dispute"},
+        "After a cash back dispute is resolved and approved, you must update the affected transaction(s).",
+        "k1",
+    )
+    assert _rewards_rule().evaluate(UPDATE, collect(msgs), msgs)
