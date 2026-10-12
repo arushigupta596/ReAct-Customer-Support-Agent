@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.pytest_cache/
+.ruff_cache/
+# tau2 writes simulations under vendor/tau2-bench/data/simulations; we copy what we keep into results/
+logs/
+.phoenix/

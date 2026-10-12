@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Approvals Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/ui/app.css?v=3">
+<style>
+  .who-am-i { display: flex; gap: 10px; align-items: center; font-size: 13px; }
+  .who-am-i button { background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.5); padding: 4px 10px; font-size: 13px; }
+  .layout { display: grid; grid-template-columns: minmax(260px, 320px) minmax(0, 1fr); gap: 16px; padding: 16px; max-width: 1400px; margin: 0 auto; align-items: start; }
+  .side { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .side select, .side input, .side button.block { width: 100%; min-width: 0; }
+  .stack { display: grid; gap: 8px; }
+  .signin { border-left: 4px solid var(--brand); }
+  .error { color: var(--bad); font-size: 13px; margin: 0; }
+  #domain-desc { margin: 0; }
+  .pad { padding: 14px; }
+  .sessions { list-style: none; margin: 0; padding: 0; }
+  .sessions li { padding: 8px; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; gap: 6px; font-size: 13px; }
+  .sessions li:hover, .sessions li.on { background: var(--brand-soft); }
+  .pill { font-size: 11px; font-weight: 600; border-radius: 999px; padding: 1px 7px; background: var(--warn-soft); color: var(--warn); }
+  .main { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .approval { border: 1px solid var(--line); border-left: 4px solid var(--warn); border-radius: 10px; padding: 14px; display: grid; gap: 10px; background: var(--card); }
+  .approval .head { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .approval .tool { font-weight: 600; font-size: 16px; }
+  .checks { display: flex; gap: 6px; flex-wrap: wrap; }
+  .check { font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); }
+  .check.pass { color: var(--brand-ink); border-color: var(--brand); }
+  .check.block, .check.would_block { color: var(--bad); border-color: var(--bad); }
+  blockquote { margin: 0; padding: 8px 12px; border-left: 3px solid var(--brand); background: var(--bg); border-radius: 0 8px 8px 0; }
+  .session-view { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0; }
+  .session-view > div { padding: 14px; min-width: 0; }
+  .session-view > div + div { border-left: 1px solid var(--line); }
+  .transcript { display: flex; flex-direction: column; gap: 8px; max-height: 60vh; overflow-y: auto; }
+  .bubble { padding: 8px 10px; border-radius: 8px; background: var(--bg); font-size: 14px; }
+  .bubble.customer { background: var(--brand-soft); white-space: pre-wrap; }
+  .bubble .who { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+  .tl-scroll { max-height: 60vh; overflow-y: auto; }
+  @media (max-width: 960px) { .layout { grid-template-columns: 1fr; } .session-view { grid-template-columns: 1fr; } .session-view > div + div { border-left: 0; border-top: 1px solid var(--line); } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="mark">EMB</span><span>Approvals Console</span></div>
+  <div class="who-am-i" id="whoami" hidden><span>Signed in as operator</span><button type="button" id="signout">Sign out</button></div>
+</header>
+<div class="layout">
+  <div class="side">
+    <section class="card pad signin" id="signin-card">
+      <h2>Operator sign-in</h2>
+      <form class="stack" id="signin">
+        <label class="muted" for="token">Operator token (<code>OPERATOR_TOKEN</code> in <code>.env</code>)</label>
+        <input id="token" type="password" autocomplete="current-password" placeholder="Paste the operator token">
+        <button class="block">Sign in</button>
+        <p class="error" id="signin-error" hidden>That token was not accepted.</p>
+      </form>
+    </section>
+    <section class="card pad">
+      <h2>Start a customer session</h2>
+      <div class="stack">
+        <label class="muted" for="domain">Domain</label>
+        <select id="domain"></select>
+        <p class="muted" id="domain-desc"></p>
+        <button id="start" class="block" disabled>Start session</button>
+        <p class="muted" id="hint" style="margin:0"></p>
+        <p class="muted" id="started" style="margin:0"></p>
+      </div>
+    </section>
+    <section class="card pad">
+      <h2>Recent sessions</h2>
+      <ul class="sessions" id="sessions"><li class="muted">Sign in to see sessions.</li></ul>
+    </section>
+  </div>
+  <div class="main">
+    <section class="card pad">
+      <div class="row" style="justify-content:space-between">
+        <h2 style="margin:0">Waiting for sign-off</h2>
+        <select id="filter" aria-label="Filter by domain"><option value="">All domains</option></select>
+      </div>
+      <p class="muted">Every action that changes customer data stops here until you approve, edit or reject it.</p>
+      <div id="queue" style="display:grid;gap:12px"></div>
+    </section>
+    <section class="card" id="view" hidden>
+      <div class="pad" style="border-bottom:1px solid var(--line)"><div class="row" style="justify-content:space-between"><h2 style="margin:0" id="view-title">Session</h2><a id="view-chat" target="_blank" rel="noopener">Open customer chat</a></div></div>
+      <div class="session-view">
+        <div><h2>Conversation</h2><div class="transcript" id="transcript"></div></div>
+        <div><h2>Decision timeline</h2><div class="tl-scroll"><ul class="timeline" id="tl"></ul></div></div>
+      </div>
+    </section>
+  </div>
+</div>
+<script src="/ui/app.js?v=3"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+const LABELS = {}, DESCS = {};
+let token = '';
+try { token = sessionStorage.getItem('opToken') || ''; } catch (e) {}
+const auth = () => ({ 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' });
+
+function setSignedIn(on) {
+  $('signin-card').hidden = on;
+  $('whoami').hidden = !on;
+  $('start').disabled = !on;
+  $('start').title = on ? '' : 'Sign in first';
+  if (!on) {
+    $('queue').innerHTML = '<p class="muted">Sign in to see actions waiting for approval.</p>';
+    $('sessions').innerHTML = '<li class="muted">Sign in to see sessions.</li>';
+    $('view').hidden = true; selected = null; open.clear();
+  }
+}
+async function signIn(candidate) {
+  const r = await fetch('/sessions', { headers: { 'Authorization': 'Bearer ' + candidate } });
+  if (!r.ok) return false;
+  token = candidate;
+  try { sessionStorage.setItem('opToken', token); } catch (e) {}
+  setSignedIn(true); refresh();
+  return true;
+}
+$('signin').onsubmit = async (e) => {
+  e.preventDefault();
+  const ok = await signIn($('token').value.trim());
+  $('signin-error').hidden = ok;
+  if (ok) $('token').value = '';
+};
+$('signout').onclick = () => {
+  token = '';
+  try { sessionStorage.removeItem('opToken'); } catch (e) {}
+  setSignedIn(false);
+};
+
+const SUGGEST = {};
+function showHint() {
+  const key = $('domain').value;
+  $('domain-desc').textContent = DESCS[key] || '';
+  const first = (SUGGEST[key] || [])[0];
+  $('hint').textContent = first ? `Try in the chat: "${first.text}"` : '';
+}
+fetch('/domains').then(r => r.json()).then(ds => {
+  ds.forEach(d => {
+    LABELS[d.key] = d.label; DESCS[d.key] = d.description; SUGGEST[d.key] = d.suggestions || [];
+    $('domain').add(new Option(d.label, d.key));
+    $('filter').add(new Option(d.label, d.key));
+  });
+  showHint();
+});
+$('domain').onchange = showHint;
+
+$('start').onclick = async () => {
+  const r = await fetch('/sessions', { method: 'POST', headers: auth(), body: JSON.stringify({ domain: $('domain').value }) });
+  const j = await r.json();
+  $('started').innerHTML = r.ok
+    ? `Started. <a href="${j.chat_url}" target="_blank" rel="noopener">Open the customer chat</a>`
+    : `Could not start: ${escapeHtml(j.detail)}`;
+  if (r.ok) { await refreshSessions(); select(j.session_id, j.domain); }
+};
+
+// ---------- selected session ----------
+let selected = null;
+const tl = timeline($('tl'), null);
+function select(id, domain) {
+  selected = id; tl.reset(id);
+  $('view').hidden = false;
+  $('view-title').textContent = `${LABELS[domain] || domain} session ${id.slice(0, 8)}`;
+  $('view-chat').href = `/chat/${id}`;
+  document.querySelectorAll('#sessions li').forEach(li => li.classList.toggle('on', li.dataset.id === id));
+  refreshView();
+}
+async function refreshView() {
+  if (!selected) return;
+  const r = await fetch('/sessions/' + selected);
+  if (r.ok) {
+    const s = await r.json();
+    $('transcript').innerHTML = s.transcript.length ? '' : '<p class="muted">No messages yet.</p>';
+    for (const m of s.transcript) {
+      const d = document.createElement('div'); d.className = 'bubble ' + m.role;
+      d.innerHTML = `<div class="who">${m.role}</div><div class="${m.role === 'agent' ? 'md' : ''}"></div>`;
+      const body = d.lastElementChild;
+      if (m.role === 'agent') body.innerHTML = markdown(m.text); else body.textContent = m.text;
+      $('transcript').append(d);
+    }
+  }
+  await tl.refresh();
+}
+
+async function refreshSessions() {
+  if (!token) return;
+  const r = await fetch('/sessions', { headers: auth() });
+  if (r.status === 401) { setSignedIn(false); return; }
+  if (!r.ok) return;
+  const items = await r.json();
+  $('sessions').innerHTML = items.length ? '' : '<li class="muted">No sessions yet.</li>';
+  for (const s of items) {
+    const li = document.createElement('li'); li.dataset.id = s.session_id;
+    li.className = s.session_id === selected ? 'on' : '';
+    li.innerHTML = `<span>${escapeHtml(LABELS[s.domain] || s.domain)} · ${escapeHtml(s.session_id.slice(0, 8))}</span>${s.pending ? '<span class="pill">needs sign-off</span>' : ''}`;
+    li.onclick = () => select(s.session_id, s.domain);
+    $('sessions').append(li);
+  }
+}
+
+// ---------- approvals ----------
+const open = new Set();
+async function refreshQueue() {
+  if (!token) return;
+  const q = $('filter').value ? `&domain=${$('filter').value}` : '';
+  const r = await fetch('/approvals?status=pending' + q, { headers: auth() });
+  if (!r.ok) return;
+  const items = await r.json();
+  for (const el of [...$('queue').children]) if (el.dataset.id && !items.find(a => a.id === el.dataset.id)) { el.remove(); open.delete(el.dataset.id); }
+  if (!items.length) { $('queue').innerHTML = '<p class="muted">Nothing waiting.</p>'; open.clear(); return; }
+  $('queue').querySelector('p.muted')?.remove();
+  for (const a of items) {
+    if (open.has(a.id)) continue;
+    open.add(a.id);
+    const checks = (a.request.policy_checks || []).map(c => `<span class="check ${c.verdict}" title="${escapeHtml(c.reason || '')}">${escapeHtml(c.name.replaceAll('_', ' '))}</span>`).join('');
+    const card = document.createElement('div');
+    card.className = 'approval'; card.dataset.id = a.id;
+    card.innerHTML = `
+      <div class="head"><span class="tool">${escapeHtml(a.tool.replaceAll('_', ' '))}</span>
+        <span class="muted">${escapeHtml(LABELS[a.domain] || a.domain)} · <a href="#" class="view">session ${escapeHtml(a.session_id.slice(0, 8))}</a> · ${new Date(a.created_at).toLocaleTimeString()}</span></div>
+      ${a.request.summary ? `<div class="muted">Agent note: ${escapeHtml(a.request.summary)}</div>` : ''}
+      <div><div class="muted">Customer's confirmation</div><blockquote>${escapeHtml(a.request.customer_confirmation)}</blockquote></div>
+      <div><div class="muted" style="margin-bottom:4px">Checks passed</div><div class="checks">${checks}</div></div>
+      <label class="muted">Arguments (edit, then "Edit and approve")<textarea spellcheck="false">${escapeHtml(JSON.stringify(a.args, null, 2))}</textarea></label>
+      <input class="reason" placeholder="Reason (required to reject)" aria-label="Reason">
+      <div class="row"><button data-d="approve">Approve</button><button data-d="edit" class="secondary">Edit and approve</button><button data-d="reject" class="danger">Reject</button></div>`;
+    card.querySelector('.view').onclick = (e) => { e.preventDefault(); select(a.session_id, a.domain); };
+    card.querySelectorAll('button').forEach(b => b.onclick = () => decide(a, card, b.dataset.d));
+    $('queue').append(card);
+  }
+}
+
+async function decide(a, card, decision) {
+  const body = { decision, reason: card.querySelector('.reason').value || null };
+  if (decision === 'edit') {
+    try { body.edited_args = JSON.parse(card.querySelector('textarea').value); }
+    catch (e) { alert('Arguments are not valid JSON.'); return; }
+  }
+  if (decision === 'reject' && !body.reason) { card.querySelector('.reason').focus(); return; }
+  card.querySelectorAll('button').forEach(b => b.disabled = true);
+  card.style.opacity = .6;
+  const r = await fetch('/approvals/' + a.id, { method: 'POST', headers: auth(), body: JSON.stringify(body) });
+  const j = await r.json();
+  if (!r.ok) { alert(j.detail); card.querySelectorAll('button').forEach(b => b.disabled = false); card.style.opacity = 1; return; }
+  card.remove(); open.delete(a.id);
+  if (selected === a.session_id) refreshView();
+  refreshSessions();
+}
+
+$('filter').onchange = () => { $('queue').innerHTML = ''; open.clear(); refreshQueue(); };
+function refresh() { if (token) { refreshQueue(); refreshSessions(); refreshView(); } }
+let authRequired = true;
+setSignedIn(false);
+fetch('/config').then(r => r.json()).then(cfg => {
+  authRequired = cfg.operator_auth;
+  if (!authRequired) {
+    // Local mode: no OPERATOR_TOKEN configured, so the console is open.
+    token = 'local';
+    $('whoami').firstElementChild.textContent = 'Local mode · no sign-in';
+    $('signout').hidden = true;
+    setSignedIn(true); refresh();
+  } else if (token) {
+    signIn(token).then(ok => { if (!ok) token = ''; });
+  }
+});
+setInterval(refresh, 3000);
+</script>
+</body>
+</html>

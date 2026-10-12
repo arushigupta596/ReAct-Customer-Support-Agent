@@ -1,0 +1,44 @@
+{
+  "baseline": {
+    "num_tasks": 10,
+    "num_sims": 10,
+    "trials": 1,
+    "success_rate": 1.0,
+    "pass_k": {
+      "1": 1.0
+    },
+    "action_recall": 0.9466666666666667,
+    "write_precision": 0.9090909090909091,
+    "write_calls": 11,
+    "invalid_call_rate": 0.0,
+    "escalation": {
+      "correct": 0,
+      "unnecessary": 0,
+      "missed": 0
+    },
+    "cost_usd_per_sim": 0.03395104,
+    "cost_usd_total": 0.33951040000000005,
+    "steps_per_sim": 11.2
+  },
+  "graph-full": {
+    "num_tasks": 10,
+    "num_sims": 10,
+    "trials": 1,
+    "success_rate": 0.8,
+    "pass_k": {
+      "1": 0.8
+    },
+    "action_recall": 0.9333333333333333,
+    "write_precision": 0.8181818181818182,
+    "write_calls": 11,
+    "invalid_call_rate": 0.0,
+    "escalation": {
+      "correct": 0,
+      "unnecessary": 0,
+      "missed": 0
+    },
+    "cost_usd_per_sim": 0.035890130000000006,
+    "cost_usd_total": 0.35890130000000003,
+    "steps_per_sim": 13.5
+  }
+}

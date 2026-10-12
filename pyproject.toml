@@ -1,0 +1,47 @@
+[project]
+name = "react-support-agent"
+version = "0.1.0"
+description = "ReAct customer-support agent on tau2-bench with guardrails, human sign-off and Phoenix tracing"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "tau2[knowledge]",
+    "langgraph>=0.6",
+    "langchain-core>=0.3",
+    "langchain-litellm>=0.2",
+    "python-dotenv>=1.0",
+    "jsonschema>=4.20",
+    "arize-phoenix-otel>=0.17.2",
+    "openinference-instrumentation-langchain>=0.1.79",
+    "openinference-instrumentation-litellm>=0.1.50",
+    "arize-phoenix-client>=3.5.0",
+    "mcp>=2.3.0",
+    "langgraph-checkpoint-postgres>=3.1.2",
+    "psycopg[binary,pool]>=3.3.6",
+    "uvicorn>=0.54.0",
+    "sse-starlette>=3.5.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "ruff>=0.9",
+]
+
+[tool.uv.sources]
+# Pinned at release tag v1.0.1 as a git submodule (not a fork); see PLAN.md D4.
+tau2 = { path = "vendor/tau2-bench", editable = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/agent", "src/tau2_adapter", "src/evals", "src/observability", "src/mcp_server", "src/api"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+src = ["src"]

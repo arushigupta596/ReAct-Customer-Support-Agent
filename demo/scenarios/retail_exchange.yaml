@@ -1,0 +1,15 @@
+title: Retail exchange with operator sign-off
+domain: retail
+story: >
+  A customer exchanges a smart thermostat for the Google-compatible model. The agent verifies
+  them, looks up the order and product, lists the exact exchange and waits for a yes. The
+  exchange stops at the console until the operator approves it.
+turns:
+  - "Hi, I'm Yusuf Rossi, zip 19122. I received order #W2378156 and want to exchange the smart thermostat for the same one but compatible with Google Home instead of Apple HomeKit. That's the only item I want to exchange."
+  - "Yes, that thermostat is the only item. Please refund or charge the difference to the original credit card."
+  - "Yes, please go ahead with the exchange."
+operator:
+  - {tool: exchange_delivered_order_items, decision: approve}
+expect:
+  events: [lookup, check, propose, signoff, act, reply]
+  executed: [exchange_delivered_order_items]

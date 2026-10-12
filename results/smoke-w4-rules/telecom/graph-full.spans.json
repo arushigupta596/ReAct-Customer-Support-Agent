@@ -1,0 +1,62 @@
+{
+ "76e7e660-e7d4-4da0-bda3-eb99ae001007": {
+  "span_id": "2dfce1c2fb654c84",
+  "trace_id": "896dcf0388194e2ea0403f18e3857ca5",
+  "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference[PERSONA:Hard]",
+  "seed": 626729
+ },
+ "434c8ef7-d86a-4879-a32c-a6f8da17e0da": {
+  "span_id": "f125ccbf5f675705",
+  "trace_id": "db72e973239c03d3926e4460075248c7",
+  "task_id": "[mobile_data_issue]airplane_mode_on|data_mode_off[PERSONA:None]",
+  "seed": 626729
+ },
+ "9e849b5c-6e38-409e-9d25-8138ab30b775": {
+  "span_id": "f19e5a69a3f4369f",
+  "trace_id": "a55a2372114854d74645242db94ad930",
+  "task_id": "[mobile_data_issue]airplane_mode_on|user_abroad_roaming_enabled_off[PERSONA:None]",
+  "seed": 626729
+ },
+ "f7978815-d42e-41ae-9a42-7dab10364743": {
+  "span_id": "93a6d5dfb274b220",
+  "trace_id": "4b46f07d32ebcd41fb375a552206f77d",
+  "task_id": "[mobile_data_issue]bad_network_preference|user_abroad_roaming_enabled_off[PERSONA:Hard]",
+  "seed": 626729
+ },
+ "ffb5ef91-b103-4325-ac56-dedfa585eded": {
+  "span_id": "58975f63ae7d785b",
+  "trace_id": "0d651c14c1ce5ac1c5d16c886a62628d",
+  "task_id": "[mobile_data_issue]data_mode_off|data_usage_exceeded[PERSONA:None]",
+  "seed": 626729
+ },
+ "0aa20ec5-e732-4af3-b440-afb67db140c9": {
+  "span_id": "078ab8e60fd99e9f",
+  "trace_id": "fac1f9979b86ceab08593b60fde70b46",
+  "task_id": "[mobile_data_issue]data_usage_exceeded|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+  "seed": 626729
+ },
+ "9afb53d1-5d03-4247-afb5-e0112d90e3d0": {
+  "span_id": "a32e693887c27711",
+  "trace_id": "bb034fcbc8fe74f7cf1e92a67040c28e",
+  "task_id": "[mobile_data_issue]data_saver_mode_on|data_usage_exceeded[PERSONA:Easy]",
+  "seed": 626729
+ },
+ "8c63c4dc-d0a9-4650-b137-3d2586e89065": {
+  "span_id": "59eaad165076fe8c",
+  "trace_id": "72310fa2f1e720f699cb7c7858bab5f2",
+  "task_id": "[mobile_data_issue]airplane_mode_on|bad_network_preference|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+  "seed": 626729
+ },
+ "0e2c04b7-8570-4171-a2e3-0a6f4ad2389a": {
+  "span_id": "dfec32ca52cf4b9b",
+  "trace_id": "3e577bf3c8145908e26c16174b80f529",
+  "task_id": "[mobile_data_issue]bad_network_preference|bad_vpn|user_abroad_roaming_enabled_off[PERSONA:Easy]",
+  "seed": 626729
+ },
+ "6bc55729-d7ae-4f00-9343-b631ac263b3d": {
+  "span_id": "2b36e2c6b0e928d5",
+  "trace_id": "47672a0e8275a19a871dba59f5859580",
+  "task_id": "[mobile_data_issue]bad_vpn|data_saver_mode_on|user_abroad_roaming_disabled_on[PERSONA:None]",
+  "seed": 626729
+ }
+}

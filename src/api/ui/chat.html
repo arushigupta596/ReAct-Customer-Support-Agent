@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Customer Support</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/ui/app.css?v=3">
+<style>
+  body { display: flex; flex-direction: column; height: 100dvh; }
+  .layout { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 16px; padding: 16px; max-width: 1200px; width: 100%; margin: 0 auto; }
+  .chat { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+  #log { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .msg { max-width: 85%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--card); overflow-wrap: anywhere; }
+  .msg.customer { align-self: flex-end; background: var(--brand-soft); white-space: pre-wrap; }
+  .status { align-self: center; color: var(--muted); font-size: 13px; }
+  .action { align-self: center; display: flex; gap: 12px; align-items: center; justify-content: space-between; border: 1px dashed var(--brand); border-radius: 10px; padding: 10px 12px; max-width: 90%; background: var(--card); }
+  .suggest { border-top: 1px solid var(--line); padding: 10px 12px 0; min-width: 0; }
+  .suggest .head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .suggest .head button { padding: 2px 6px; font-size: 12px; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; max-height: 132px; overflow-y: auto; }
+  .chips.hidden { display: none; }
+  .sug { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left; max-width: 100%; background: var(--card); color: var(--ink); border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; font-size: 13px; line-height: 1.35; }
+  .sug:hover:not(:disabled) { border-color: var(--brand); background: var(--brand-soft); }
+  .sug .k { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+  .sug .k.signoff { color: var(--brand-ink); } .sug .k.question { color: var(--info); }
+  .sug .k.policy { color: var(--warn); } .sug .k.guard { color: var(--bad); }
+  @media (max-width: 860px) { .chips { flex-wrap: nowrap; overflow-x: auto; max-height: none; } .sug { min-width: 220px; } }
+  form { display: flex; gap: 8px; padding: 12px; }
+  form input { flex: 1; }
+  aside { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+  aside header { padding: 12px 14px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: baseline; }
+  aside .scroll { overflow-y: auto; padding: 6px 8px; flex: 1; }
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; padding: 8px; }
+    aside .scroll { max-height: 34vh; }
+  }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="mark">EMB</span><span>Customer Support</span></div>
+  <span class="badge" id="domain">…</span>
+</header>
+<div class="layout">
+  <section class="card chat">
+    <div id="log" aria-live="polite"></div>
+    <div class="suggest">
+      <div class="head"><span class="muted">Suggested messages</span><button type="button" class="secondary" id="toggle" aria-expanded="true">Hide</button></div>
+      <div class="chips" id="chips"></div>
+    </div>
+    <form id="f"><input id="text" autocomplete="off" placeholder="Type your message" aria-label="Message"><button id="send">Send</button></form>
+  </section>
+  <aside class="card">
+    <header><h2 style="margin:0">How the agent decided</h2><span class="muted">live</span></header>
+    <div class="scroll"><ul class="timeline" id="tl"></ul></div>
+  </aside>
+</div>
+<script src="/ui/app.js?v=3"></script>
+<script>
+const sid = location.pathname.split('/').pop();
+const $ = (id) => document.getElementById(id);
+const tl = timeline($('tl'), sid);
+let busy = false, waiting = false, shown = -1;
+
+function render(s) {
+  $('domain').textContent = { banking_knowledge: 'Banking', retail: 'Retail', airline: 'Airline' }[s.domain] || s.domain;
+  const log = $('log');
+  log.innerHTML = '';
+  for (const m of s.transcript) {
+    const d = document.createElement('div');
+    d.className = 'msg ' + m.role;
+    if (m.role === 'agent') { d.classList.add('md'); d.innerHTML = markdown(m.text); } else d.textContent = m.text;
+    log.append(d);
+  }
+  for (const a of s.user_actions || []) {
+    const box = document.createElement('div'); box.className = 'action';
+    const args = Object.entries(a.arguments || {}).map(([k, v]) => `${k}: ${v}`).join(', ');
+    box.innerHTML = '<div><strong></strong><div class="muted"></div></div><button>Do it</button>';
+    box.querySelector('strong').textContent = a.tool.replace(/_\d+$/, '').replaceAll('_', ' ');
+    box.querySelector('.muted').textContent = (a.description || '') + (args ? ` (${args})` : '');
+    box.querySelector('button').disabled = busy || s.awaiting_approval;
+    box.querySelector('button').onclick = () => turn(`/sessions/${sid}/user-actions`, { tool: a.tool }, 'Running it…');
+    log.append(box);
+  }
+  if (s.awaiting_approval) {
+    const d = document.createElement('div'); d.className = 'status';
+    d.textContent = 'A team member is reviewing your request…'; log.append(d);
+  }
+  if (s.transcript.length !== shown) { log.scrollTop = log.scrollHeight; shown = s.transcript.length; }
+  waiting = s.awaiting_approval;
+  $('send').disabled = busy || waiting;
+  document.querySelectorAll('.sug').forEach(b => b.disabled = busy || waiting);
+  loadSuggestions(s.domain);
+}
+
+const KIND_CLASS = { 'Sign-off': 'signoff', 'Question': 'question', 'Policy test': 'policy', 'Guard test': 'guard' };
+let suggestionsFor = null;
+async function loadSuggestions(domain) {
+  if (suggestionsFor === domain) return;
+  suggestionsFor = domain;
+  const d = (await (await fetch('/domains')).json()).find(x => x.key === domain);
+  $('chips').innerHTML = '';
+  for (const sg of d?.suggestions || []) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'sug';
+    b.innerHTML = `<span class="k ${KIND_CLASS[sg.kind] || ''}"></span><span class="t"></span>`;
+    b.querySelector('.k').textContent = sg.kind;
+    b.querySelector('.t').textContent = sg.text;
+    b.onclick = () => send(sg.text);
+    $('chips').append(b);
+  }
+}
+$('toggle').onclick = () => {
+  const hidden = $('chips').classList.toggle('hidden');
+  $('toggle').textContent = hidden ? 'Show' : 'Hide';
+  $('toggle').setAttribute('aria-expanded', String(!hidden));
+  try { localStorage.setItem('hideSuggestions', hidden ? '1' : ''); } catch (e) {}
+};
+try { if (localStorage.getItem('hideSuggestions')) $('toggle').click(); } catch (e) {}
+
+async function poll() {
+  const r = await fetch('/sessions/' + sid);
+  if (r.ok) render(await r.json());
+  await tl.refresh();
+}
+
+async function turn(url, body, label) {
+  busy = true; $('send').disabled = true;
+  const t = document.createElement('div'); t.className = 'status'; t.textContent = label; $('log').append(t);
+  $('log').scrollTop = $('log').scrollHeight;
+  if (url.endsWith('/messages')) await streamTurn(url, body, () => tl.refresh());
+  else await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  busy = false; await poll();
+}
+
+function send(text) {
+  if (!text || busy || waiting) return;
+  $('text').value = '';
+  document.querySelectorAll('.sug').forEach(b => b.disabled = true);
+  const d = document.createElement('div'); d.className = 'msg customer'; d.textContent = text; $('log').append(d);
+  turn(`/sessions/${sid}/messages`, { content: text }, 'Agent is working…');
+}
+
+$('f').onsubmit = (e) => { e.preventDefault(); send($('text').value.trim()); };
+
+poll(); setInterval(() => { if (!busy) poll(); }, 2500);
+</script>
+</body>
+</html>

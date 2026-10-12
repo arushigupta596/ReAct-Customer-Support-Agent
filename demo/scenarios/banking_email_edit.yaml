@@ -1,0 +1,17 @@
+title: Banking email change, verified and corrected by the operator
+domain: banking_knowledge
+story: >
+  A customer verifies their identity with two personal details, then asks to change their
+  email. The verification is logged automatically (an audit record, no sign-off), the email
+  change stops at the console, and the operator corrects the address's capitalisation before
+  approving.
+turns:
+  - "Hi, I'm Liang Jinhai. I'd like to update the email address on my account."
+  - "My date of birth is 04/12/2002 and my phone number is 312-555-0847. My current email is jinhai.liang@techventures.com."
+  - "The new email is Liang.Jinhai@Example.COM. Yes, please update it."
+  - "Yes, I confirm the change."
+operator:
+  - {tool: change_user_email, decision: edit, edited_args: {new_email: liang.jinhai@example.com}}
+expect:
+  events: [lookup, check, propose, signoff, act, reply]
+  executed: [change_user_email]

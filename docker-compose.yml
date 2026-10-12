@@ -1,0 +1,59 @@
+# Local stack: the serve container (API + MCP), its Postgres, and Phoenix for traces.
+#   docker compose up -d --build        then open http://localhost:8080/console
+services:
+  app-db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: react_agent
+    volumes:
+      - app-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d react_agent"]
+      interval: 5s
+      retries: 10
+
+  api:
+    build: .
+    depends_on:
+      app-db:
+        condition: service_healthy
+      phoenix:
+        condition: service_started
+    env_file: .env          # OPENROUTER_API_KEY, models, OPERATOR_TOKEN, MCP_TOKEN
+    environment:
+      DATABASE_URL: postgresql://app:app@app-db:5432/react_agent
+      PHOENIX_COLLECTOR_ENDPOINT: http://phoenix:6006   # export + project lookup, inside the network
+      PHOENIX_UI_URL: http://localhost:6006             # trace links, opened by your browser
+      PORT: "7860"
+    ports:
+      - "8080:7860"
+
+  phoenix-db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: phoenix
+      POSTGRES_PASSWORD: phoenix
+      POSTGRES_DB: phoenix
+    volumes:
+      - phoenix-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U phoenix"]
+      interval: 5s
+      retries: 10
+
+  phoenix:
+    image: arizephoenix/phoenix:version-20.21.0
+    depends_on:
+      phoenix-db:
+        condition: service_healthy
+    environment:
+      PHOENIX_SQL_DATABASE_URL: postgresql://phoenix:phoenix@phoenix-db:5432/phoenix
+    ports:
+      - "6006:6006"   # UI + OTLP over HTTP
+      - "4317:4317"   # OTLP over gRPC
+
+volumes:
+  app-db:
+  phoenix-db:

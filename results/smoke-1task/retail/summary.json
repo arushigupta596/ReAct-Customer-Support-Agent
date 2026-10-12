@@ -1,0 +1,23 @@
+{
+  "graph-full": {
+    "num_tasks": 1,
+    "num_sims": 1,
+    "trials": 1,
+    "success_rate": 1.0,
+    "pass_k": {
+      "1": 1.0
+    },
+    "action_recall": 1.0,
+    "write_precision": 1.0,
+    "write_calls": 1,
+    "invalid_call_rate": 0.0,
+    "escalation": {
+      "correct": 0,
+      "unnecessary": 0,
+      "missed": 0
+    },
+    "cost_usd_per_sim": 0.102539,
+    "cost_usd_total": 0.102539,
+    "steps_per_sim": 12.0
+  }
+}
