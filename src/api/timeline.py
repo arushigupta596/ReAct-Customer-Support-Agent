@@ -7,7 +7,7 @@ Events are stored in decision_events so any session can be replayed in a meeting
 import json
 import os
 import re
-from functools import cache
+import time
 
 import httpx
 from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
@@ -275,26 +275,36 @@ def phoenix_ui() -> str | None:
     return os.getenv("PHOENIX_UI_URL") or os.getenv("PHOENIX_COLLECTOR_ENDPOINT")
 
 
-@cache
+_project = {"id": None, "checked_at": 0.0}
+RETRY_AFTER_S = 60
+
+
 def phoenix_project_id(name: str = "serve") -> str | None:
+    """Phoenix's id for the serve project, for trace deep links.
+
+    A miss (Phoenix down, or no trace exported yet) is remembered for a minute, so an
+    unreachable Phoenix costs one short timeout a minute instead of one per timeline event.
+    """
+    if _project["id"] or time.monotonic() - _project["checked_at"] < RETRY_AFTER_S:
+        return _project["id"]
+    _project["checked_at"] = time.monotonic()
     # Looked up from inside the deployment, which may reach Phoenix at a different address.
     base = os.getenv("PHOENIX_COLLECTOR_ENDPOINT") or phoenix_ui()
     if not base:
         return None
     headers = {"authorization": f"Bearer {k}"} if (k := os.getenv("PHOENIX_API_KEY")) else {}
     try:
-        projects = httpx.get(f"{base.rstrip('/')}/v1/projects", headers=headers, timeout=5).json()[
-            "data"
-        ]
+        resp = httpx.get(f"{base.rstrip('/')}/v1/projects", headers=headers, timeout=3)
+        projects = resp.json()["data"]
     except Exception:  # noqa: BLE001  the timeline still works without the deep link
         return None
-    return next((p["id"] for p in projects if p["name"] == name), None)
+    _project["id"] = next((p["id"] for p in projects if p["name"] == name), None)
+    return _project["id"]
 
 
 def trace_url(trace_id: str) -> str | None:
     project = phoenix_project_id()
     base = phoenix_ui()
     if not (project and base):
-        phoenix_project_id.cache_clear()  # the project appears after the first exported trace
         return None
     return f"{base.rstrip('/')}/projects/{project}/traces/{trace_id}"

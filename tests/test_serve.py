@@ -1,6 +1,8 @@
 """Serve mode end to end: real API + MCP server + Postgres + tau2 retail data, scripted LLM.
 
-Needs the local Postgres from .env (DATABASE_URL) with scripts/migrate.py applied; skipped otherwise.
+Runs against TEST_DATABASE_URL (default: the local Postgres database react_agent) with
+scripts/migrate.py applied; skipped otherwise. Never the DATABASE_URL in .env, which may point
+at the hosted demo's database.
 """
 
 import json
@@ -19,6 +21,9 @@ from langchain_core.messages import AIMessage
 from tests.fakes import ScriptedChatModel, tool_call
 
 load_dotenv()
+os.environ["DATABASE_URL"] = os.getenv(
+    "TEST_DATABASE_URL", "postgresql://localhost:5432/react_agent"
+)
 
 
 def _db_ready() -> bool:

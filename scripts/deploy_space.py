@@ -73,10 +73,45 @@ Every decision is shown in a live timeline with a link to its trace.
 """
 
 
+def upload_code(api: HfApi, space: str, repo: str, sha: str) -> None:
+    api.upload_file(
+        path_or_fileobj=SPACE_README.format(repo=repo).encode(),
+        path_in_repo="README.md",
+        repo_id=space,
+        repo_type="space",
+        commit_message=f"Space README ({sha})",
+    )
+    api.upload_folder(
+        folder_path=ROOT,
+        repo_id=space,
+        repo_type="space",
+        allow_patterns=UPLOAD,
+        ignore_patterns=SKIP,
+        delete_patterns=[
+            "src/**",
+            "scripts/**",
+            "vendor/**",
+        ],  # drop files removed since last deploy
+        commit_message=f"Deploy {sha}",
+    )
+    print(f"Deployed {sha} to https://huggingface.co/spaces/{space}")
+    print(f"App URL: https://{space.replace('/', '-').replace('_', '-').lower()}.hf.space/console")
+
+
 def main() -> None:
     space = os.environ.get("HF_SPACE")
     if not os.environ.get("HF_TOKEN") or not space:
         sys.exit("Set HF_TOKEN and HF_SPACE (for example 'your-name/react-support-agent').")
+    repo = os.environ.get(
+        "GITHUB_REPO_URL", "https://github.com/arushigupta596/ReAct-Customer-Support-Agent"
+    )
+    sha = os.environ.get("GITHUB_SHA", "local")[:7]
+
+    if "--code-only" in sys.argv:
+        # Space created and its secrets set on the Hugging Face website: only push the code.
+        upload_code(HfApi(), space, repo, sha)
+        return
+
     if not os.environ.get("OPERATOR_TOKEN"):
         sys.exit(
             "Refusing to deploy a public Space without OPERATOR_TOKEN: the console would be open to anyone."
@@ -100,32 +135,7 @@ def main() -> None:
     if env.get("PHOENIX_COLLECTOR_ENDPOINT"):
         api.add_space_variable(space, "PHOENIX_UI_URL", env["PHOENIX_COLLECTOR_ENDPOINT"])
 
-    repo = env.get(
-        "GITHUB_REPO_URL", "https://github.com/arushigupta596/ReAct-Customer-Support-Agent"
-    )
-    sha = env.get("GITHUB_SHA", "local")[:7]
-    api.upload_file(
-        path_or_fileobj=SPACE_README.format(repo=repo).encode(),
-        path_in_repo="README.md",
-        repo_id=space,
-        repo_type="space",
-        commit_message=f"Space README ({sha})",
-    )
-    api.upload_folder(
-        folder_path=ROOT,
-        repo_id=space,
-        repo_type="space",
-        allow_patterns=UPLOAD,
-        ignore_patterns=SKIP,
-        delete_patterns=[
-            "src/**",
-            "scripts/**",
-            "vendor/**",
-        ],  # drop files removed since last deploy
-        commit_message=f"Deploy {sha}",
-    )
-    print(f"Deployed {sha} to https://huggingface.co/spaces/{space}")
-    print(f"App URL: https://{space.replace('/', '-').replace('_', '-').lower()}.hf.space/console")
+    upload_code(api, space, repo, sha)
 
 
 if __name__ == "__main__":

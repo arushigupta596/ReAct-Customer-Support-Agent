@@ -1,10 +1,72 @@
-# Deploying the demo to a Hugging Face Space
+# Deploying the live demo
 
 The live demo runs as one Docker container (API, MCP tool server and console) on a free Hugging Face Space, with Neon Postgres for state and Phoenix Cloud for traces. GitHub holds every secret and pushes the app to the Space through the **Deploy to Hugging Face Space** workflow.
 
 Cost: $0 for hosting. Model calls bill your OpenRouter key per conversation (about $0.05 to $0.20 each).
 
-## 1. Create the accounts (once)
+## Recommended: Google Cloud Run (free tier)
+
+Hugging Face Docker Spaces now require a paid PRO plan, so the free route is Cloud Run: the same Dockerfile, built on Google's servers, scaled to zero when idle (about 10 to 20 seconds to wake), 1 GB memory. The app uses about 330 MB after a conversation and roughly 450 to 550 MB with all three domains loaded, which rules out 512 MB free tiers elsewhere.
+
+**Once:**
+
+1. At [console.cloud.google.com](https://console.cloud.google.com), create a project and note its **Project ID**. Link a billing account (a card is required for verification; a demo stays inside the free tier). Recommended: **Billing → Budgets & alerts → Create budget** of $1 with email alerts.
+2. Sign in from the terminal (opens a browser) and select the project:
+
+```bash
+gcloud auth login
+```
+
+```bash
+gcloud config set project <your-project-id>
+```
+
+```bash
+gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com
+```
+
+3. Make sure `.env` has the hosted database: `DATABASE_URL` (Supabase transaction pooler, port 6543) and `DATABASE_URL_DIRECT` (session pooler, port 5432), plus `OPENROUTER_API_KEY` and `MCP_TOKEN`.
+
+**Each deploy:** set a console password for the public URL in the shell (keep it in a password manager; it is never written to `.env`), then deploy:
+
+```bash
+read -s OPERATOR_TOKEN && export OPERATOR_TOKEN
+```
+
+```bash
+GCP_PROJECT=<your-project-id> scripts/deploy_cloudrun.sh
+```
+
+The first build takes about 5 to 10 minutes; the script prints the console URL. It deploys to Tokyo (`asia-northeast1`) by default, next to the Supabase database; set `REGION=...` to change it. `.gcloudignore` keeps `.env`, results and tau2's 576 MB of leaderboard files out of the upload; `scripts/cloudrun_env.py` passes only the settings the app needs and refuses to deploy without `OPERATOR_TOKEN` or with a localhost database.
+
+**Before a demo:** open the URL a minute early (scale-to-zero cold start), and resume the Supabase project if it paused after a quiet week.
+
+## Hugging Face Space (needs a PRO plan for Docker)
+
+### Option A: set everything up on the websites
+
+No GitHub Actions involved; one local command uploads the code.
+
+1. **Neon** (neon.tech): create a project, click **Connect**, copy the **pooled** connection string (connection pooling on) and the **direct** one (pooling off).
+2. **Hugging Face** (huggingface.co/new-space): SDK **Docker**, template **Blank**, hardware **CPU basic (free)**, visibility **Public**, then **Create Space**.
+3. In the Space: **Settings → Variables and secrets**.
+   - Secrets: `OPENROUTER_API_KEY`, `DATABASE_URL` (pooled), `DATABASE_URL_DIRECT` (direct), `OPERATOR_TOKEN` (console password), `MCP_TOKEN` (any random string)
+   - Variables: `AGENT_MODEL` = `openrouter/anthropic/claude-sonnet-5.5`, `AGENT_PROVIDER` = `anthropic`, `AGENT_EFFORT` = `medium`
+4. Hugging Face → Settings → Access Tokens → create a **Write** token, then upload the code:
+
+```bash
+read -s HF_TOKEN && export HF_TOKEN
+```
+
+```bash
+HF_SPACE=<your-name>/<space-name> uv run --no-project --with huggingface_hub python scripts/deploy_space.py --code-only
+```
+
+Repeat step 4 whenever you want the Space to pick up new code.
+
+### Option B: deploy through GitHub Actions
+
+### 1. Create the accounts (once)
 
 | Service | What to create | What you'll need from it |
 |---|---|---|

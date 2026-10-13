@@ -52,9 +52,15 @@ async def lifespan(app: FastAPI):
     if os.getenv("PHOENIX_COLLECTOR_ENDPOINT"):
         from observability.tracing import init_tracing
 
-        init_tracing(project="serve", batch=False)  # export at once; hosts may freeze idle work
+        # Batched, in the background: a slow or unreachable Phoenix must never block a customer
+        # turn (synchronous export retried for minutes when Phoenix was down). We run on a
+        # long-lived container, so there is no serverless freeze to export ahead of.
+        init_tracing(project="serve", batch=True)
     async with mcp_server.session_manager.run():
         yield
+    from observability.tracing import flush
+
+    flush()  # send queued spans on shutdown
 
 
 app = FastAPI(title="ReAct Support Agent", lifespan=lifespan)

@@ -1,0 +1,27 @@
+# What `gcloud run deploy --source .` uploads to Cloud Build (mirrors .dockerignore).
+.gcloudignore
+.git
+.github
+.venv
+**/__pycache__
+.pytest_cache
+.ruff_cache
+.phoenix
+.claude
+.env
+.env.*
+!.env.example
+.cloudrun.env.yaml
+logs
+results
+docs
+tests
+evals
+demo
+*.pdf
+vendor/tau2-bench/.git
+vendor/tau2-bench/data/tau2/results
+vendor/tau2-bench/data/simulations
+vendor/tau2-bench/data/voice
+vendor/tau2-bench/web
+vendor/tau2-bench/tests

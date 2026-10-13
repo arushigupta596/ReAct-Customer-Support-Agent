@@ -322,3 +322,9 @@ Done:
 - **Docs:** `docs/deploy.md` (accounts, secrets, deploy, rehearse against the URL). The demo video was dropped (user decision).
 
 Waiting on the user: Hugging Face token, Neon connection strings, Phoenix Cloud key and endpoint, set as GitHub secrets (docs/deploy.md section 2); then run the deploy workflow.
+
+### Hosting decision (Oct 13 2026)
+
+Hugging Face now requires a paid PRO plan for Docker Spaces, so free hosting moved to Google Cloud Run (deploy script, `.gcloudignore` and guide written; Supabase set up and verified as the hosted database). **The user then chose to stay local:** the demo runs on the presenter's Mac against local Postgres, shown over screen share. The Cloud Run and Hugging Face routes stay documented in `docs/deploy.md` but are not used; the Supabase connection strings are kept commented out in `.env`.
+
+Robustness fixes found while switching databases (debug journal entry 14): batched trace export so an unreachable Phoenix never blocks a customer turn, a cached Phoenix project lookup, and tests pinned to a local test database.
